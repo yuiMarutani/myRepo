@@ -37,14 +37,14 @@ class Registeruser_db{
         } else {
             // usersに挿入
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $sql = "insert into users(USERS_ID,user_name,email,password) values(?,?,?,?)";
+            $sql = "INSERT INTO users(USERS_ID,user_name,email,password) VALUES(?,?,?,?)";
             $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute(array($USERS_ID, $user_name, $email, $password));
             $rowCount = $stmt->fetchColumn();
             $msg = "正常に登録できました。";
 
             //　password_resetにemailのみ挿入
-            $sql_2 = "insert into password_reset(email) values(?)";
+            $sql_2 = "INSERT INTO password_reset(email) VALUES(?)";
             $stmt = $this->pdo->prepare($sql_2);
             $result = $stmt->execute(array($email));
         }

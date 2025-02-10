@@ -1,15 +1,22 @@
 <?php
-print_r($_POST);
+require_once ('Modules/Passwordreset.Class.php');
+
 //ログインの認証
+
+$passre = new Passwordreset();
 if($_SERVER['REQUEST_METHOD']==='POST'){
     $password1 = htmlspecialchars($_POST['password1']);
     $password2 = htmlspecialchars($_POST['password2']);
-    if($password1 === $password2){
-        //password1の更新
-    }
-    
+    $csrfToken = htmlspecialchars($_REQUEST['csrfToken']);
+
+    $email = htmlspecialchars($_SESSION['email']);
+    //更新の条件
+    //$password1がテーブルに存在しない
+    $err_msg = $passre->passwordVerify($email,$password1,$password2,$csrfToken);
+
+
 }else{
-    
+
 }
 ?>
 <!DOCTYPE html>
@@ -38,8 +45,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     <tr>
                         <td></td>
                         <td>
-                            <?php if(isset($msg) && !empty($msg)){?>
-                                <span style="text-align:center;color:red;">失敗しました。</span>
+                            <?php if(isset($err_msg) && !empty($err_msg)){?>
+                                <span style="text-align:center;color:red;"><?php echo $err_msg; ?></span>
                             <?php }?>
                         </td>
                     </tr>

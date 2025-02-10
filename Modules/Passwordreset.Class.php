@@ -9,7 +9,7 @@ class Passwordreset{
     public function __construct() {
         $database = new Connect();
         $this->pdo = $database->getPDO();
-        session_start();
+        $sessionob = session_start();
     }
     
  
@@ -37,7 +37,6 @@ class Passwordreset{
 
             // password reset token生成
             $passwordResetToken = bin2hex(random_bytes(32));
-
             //timestampを作成
             $now = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
             $token_sent_time = $now->format('Y-m-d H:i:s');
@@ -64,13 +63,15 @@ class Passwordreset{
             $mail->Username = '115dc159e858a8';
             $mail->Password = '5f40c2f05c7f3f';
             $mail->CharSet = 'UTF-8';
+            $_SESSION['email'] = $email;
 
             $mail->setFrom('確認@登録済みの-ドメイン', 'あなたのホテル');
             $mail->addAddress('rojoblanco5963yui@yahoo.ne.jp', '私');
             $mail->Subject = 'お買い物管理アプリパスワードリセットについて';
             // HTML設定
             $mail->isHTML(TRUE);
-            $mail->Body = "<html>お買い物管理アプリをご利用いただき有難うございます。<br>24時間以内に以下リンクを押し、パスワードをリセットして下さい。</br><a href='http://localhost/new_app/passwordReset.php?csrfToken= {$csrfToken}'>パスワードリセット</a></html>";
+            $mail->Body = "<html>お買い物管理アプリをご利用いただき有難うございます。<br>24時間以内に以下リンクを押し、パスワードをリセットして下さい。</br><a href='http://localhost/new_app/passwordReset.php?csrfToken= {$passwordResetToken}'>パスワードリセット</a></html>";
+            
             $mail->AltBody = '';
             // 添付ファイルを追加
             $attachmentPath = './confirmations/yourbooking.pdf';
@@ -96,29 +97,54 @@ class Passwordreset{
         return $msg;
     } 
 
-    public function passwordVerify($password){
-        //passwordをhash化
-        $passwordhashed =  password_hash($password, PASSWORD_DEFAULT);
-        $sth = $this->pdo->prepare("SELECT count(*) FROM users WHERE password = ?");
-        $sth->execute(array($passwordhashed));
+    public function passwordVerify($email,$password,$password2,$csrfToken){
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        //emailとtokenが存在する時
+        $csrfToken = substr($csrfToken, 1, 32);
+        // Convert the truncated form data to binary
+     
+        $sth = $this->pdo->prepare("SELECT * FROM password_reset WHERE email = ? AND token = ?");
+        $sth->execute(array($email, $csrfToken));
         $data = $sth->fetch(PDO::FETCH_ASSOC);
-        //データが合ったらエラーを返す
-        $error = '';
-        if($data>0){
-            $error.= '<span style="color:red;">パスワードが存在します。他のパスワードをもう一度作成し直して下さい。</span>';
-        }else{
-        //データがないとき
-            if(preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,24}$/', $password)){
-            //パスワードが条件を満たす時更新処理を行う
-                $sth = $this->pdo->prepare("UPDATE users set token = ?, token_sent_time = ? where email = ?");
-                $result = $sth->execute(array($passwordResetToken,$token_sent_time,$email));
+        $msg = '';
 
-            } else {
-                $error.= '<span style="color:red;">パスワードが以下の条件を満たしていません。<br></span>';
+        if (isset($data) && $data!='') {
+            // 期限切れでないかチェック
+            //token_sent_timeに24時間足したもの
+            $timestamp = $data['token_sent_time'];
+            $date = new DateTime($timestamp);
+            $tokenexpire = $date->modify('+1 day');
+            // フォーマットを指定して出力
+            $tokenExpiration = $date->format('Y-m-d H:i:s');
+
+            if (time() > $tokenExpiration) {
+                $msg.= "リンクの期限が切れています。";
             }
-            
+
+            //パスワードの条件式
+            if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,24}$/', $password)) {
+               
+            }else{
+                $msg.="新しいパスワードは少なくとも1つの小文字、1つの大文字、1つの数字を含み、8文字以上24文字以下で作成して下さい。";
+            }
+
+            // パスワードが両方合っているか
+            if ($password!== $password2) {
+                $msg.= "パスワードが一致しません。";
+            }
+
+            // パスワードを更新
+            if($msg==""){
+                $updateStm = $this->pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
+                $updateStm->execute(array($hashedPassword, $email));
+                $msg.= "パスワードが変更されました。";
+            }
+           
+        } else {
+            $msg.= "メールアドレスかトークンが不正です。";
         }
 
+        return $msg;
     }
-
 }
