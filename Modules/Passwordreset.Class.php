@@ -70,7 +70,7 @@ class Passwordreset{
             $mail->Subject = 'お買い物管理アプリパスワードリセットについて';
             // HTML設定
             $mail->isHTML(TRUE);
-            $mail->Body = '<html>お買い物管理アプリをご利用いただき有難うございます。<br>24時間以内に以下リンクを押し、パスワードをリセットして下さい。</br><a href="localhost/new_app/passwordReset.php?csrfToken={$csrfToken}">パスワードリセット</a></html>';
+            $mail->Body = "<html>お買い物管理アプリをご利用いただき有難うございます。<br>24時間以内に以下リンクを押し、パスワードをリセットして下さい。</br><a href='http://localhost/new_app/passwordReset.php?csrfToken= {$csrfToken}'>パスワードリセット</a></html>";
             $mail->AltBody = '';
             // 添付ファイルを追加
             $attachmentPath = './confirmations/yourbooking.pdf';
@@ -95,5 +95,30 @@ class Passwordreset{
         
         return $msg;
     } 
+
+    public function passwordVerify($password){
+        //passwordをhash化
+        $passwordhashed =  password_hash($password, PASSWORD_DEFAULT);
+        $sth = $this->pdo->prepare("SELECT count(*) FROM users WHERE password = ?");
+        $sth->execute(array($passwordhashed));
+        $data = $sth->fetch(PDO::FETCH_ASSOC);
+        //データが合ったらエラーを返す
+        $error = '';
+        if($data>0){
+            $error.= '<span style="color:red;">パスワードが存在します。他のパスワードをもう一度作成し直して下さい。</span>';
+        }else{
+        //データがないとき
+            if(preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,24}$/', $password)){
+            //パスワードが条件を満たす時更新処理を行う
+                $sth = $this->pdo->prepare("UPDATE users set token = ?, token_sent_time = ? where email = ?");
+                $result = $sth->execute(array($passwordResetToken,$token_sent_time,$email));
+
+            } else {
+                $error.= '<span style="color:red;">パスワードが以下の条件を満たしていません。<br></span>';
+            }
+            
+        }
+
+    }
 
 }
