@@ -22,7 +22,7 @@ class Passwordreset{
     public function authorize($email,$_csrf_token){
         //tokenを変数に入れなおす
         $csrfToken = $_csrf_token;
-
+        //メールがテーブルに存在したらメール送信
         $sth = $this->pdo->prepare("SELECT * FROM password_reset where email = ?");
         $sth->execute(array($email));
         $data = $sth->fetchAll();
@@ -124,7 +124,7 @@ class Passwordreset{
     public function passwordVerify($email,$password,$password2,$csrfToken){
         //データベース更新前にパスワードをhash化する
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-     
+        
         //password_resetテーブルからトークンとメールが一致するものがあるかカウント
         $sth = $this->pdo->prepare("SELECT * FROM password_reset WHERE email = ? AND token = ?");
         $sth->execute(array($email, $csrfToken));
@@ -158,7 +158,7 @@ class Passwordreset{
             if ($password!== $password2) {
                 $msg.= "パスワードが一致しません。<br>";
             }
-
+         
             // パスワードを更新
             if($msg==""){
                 $updateStm = $this->pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
@@ -170,7 +170,7 @@ class Passwordreset{
             //データがpassword_resetテーブルに存在しないとき
             $msg.= "メールアドレスかトークンが不正です。<br>";
         }
-
-        return $msg;
+        
+        return $msg;;
     }
 }

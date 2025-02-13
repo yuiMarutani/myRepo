@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     
     //$password1がテーブルに存在しない
     $err_msg = $passre->passwordVerify($email,$password1,$password2,$csrfToken);
-
+    
 }
 ?>
 <!DOCTYPE html>

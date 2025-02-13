@@ -25,6 +25,7 @@ class Authentification{
             $msg ='';
             //login成功時はwrapper.phpへ行き、セッションを作る
             $_SESSION['user_name'] = $result['user_name'];
+            $_SESSION['password'] = $password;
             header("location:wrapper.php");
         }else { 
             $msg = 'ログインに失敗しました。';

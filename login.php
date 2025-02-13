@@ -13,9 +13,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $auth = new Authentification();
         $msg = $auth->authentification($USERS_ID,$password);
     }
-    
   
-    
 }
 
 

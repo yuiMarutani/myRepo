@@ -16,14 +16,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     $email= $filter_list['email'];    
 
-    
 
     //csrftokenの作成
 
     $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
 
     $msg = $passwordreset->authorize($email,$_SESSION['_csrf_token']);
-
+    $mailsend = 1;
     
 
 }
@@ -171,9 +170,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         <div class="col" style="text-align:center;">
 
                             <button type="button" class="btn btn-secondary" onclick="location.href='login.php'">戻る</button>
-
-                            <button type="submit" class="btn btn-primary">送信</button>
-
+                            <?php if(isset($mailsend)&& $msg=="メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。"){?>
+                                <button type="submit" class="btn btn-primary" disabled>送信</button>
+                            <?php }else{?>
+                                <button type="submit" class="btn btn-primary">送信</button>
+                            <?php }?>
                         </div>
 
                         <div class="col">
@@ -195,7 +196,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             }
             ?>
             ">
-
     </form>
 
     </main>

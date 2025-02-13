@@ -1,3 +1,9 @@
+<?php 
+require_once('Modules/User.Class.php');
+require_once('Modules/Authentification.Class.php');
+session_start();
+print_r($_SESSION);
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -62,7 +68,7 @@
                 </div>
                 <!--右サイド-->
                 <div class="col py-3">
-                    <h5>丸谷結衣様</h5>
+                    <h5><?php echo $_SESSION['user_name'];?>様</h5>
                     <span>●月●日</span><br>
                     <span>〇回目のお買い物</span>
                     <div class="container" style="padding:20px;">
