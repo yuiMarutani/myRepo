@@ -1,4 +1,5 @@
 <?php
+set_include_path('/home/r5736346/public_html/marutani098723.com/new_app/');
 require_once('Modules/User.Class.php');
 require_once('Modules/Authentification.Class.php');
 

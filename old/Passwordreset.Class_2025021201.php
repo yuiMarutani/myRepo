@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 
 class Passwordreset{
@@ -19,6 +19,7 @@ class Passwordreset{
         $sessionob = session_start();
     }
     
+ 
     public function authorize($email,$_csrf_token){
         //tokenを変数に入れなおす
         $csrfToken = $_csrf_token;
@@ -26,7 +27,6 @@ class Passwordreset{
         $sth = $this->pdo->prepare("SELECT * FROM password_reset where email = ?");
         $sth->execute(array($email));
         $data = $sth->fetchAll();
-        
         $count = count($data);
         $msg = '';
 
@@ -40,18 +40,21 @@ class Passwordreset{
                 || $csrfToken !== $_SESSION['_csrf_token']
             ) {
                 exit('不正なリクエストです');
-            }else{
-                $_SESSION['csrftoken'] = $csrfToken;
             }
 
+            // password reset token生成
+            $passwordResetToken = bin2hex(random_bytes(32));
+            $passwordResetToken = substr($passwordResetToken, 1, 32);
             //timestampを作成
             $now = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
             $token_sent_time = $now->format('Y-m-d H:i:s');
 
             $this->pdo->beginTransaction();
+            
+
             //timestampとtokenをpassword_resetテーブルに更新
             $sth = $this->pdo->prepare("UPDATE password_reset set token = ?, token_sent_time = ? where email = ?");
-            $result = $sth->execute(array($csrfToken,$token_sent_time,$email));
+            $result = $sth->execute(array($passwordResetToken,$token_sent_time,$email));
             
             if ($result) { 
                 $this->pdo->commit(); 
@@ -59,13 +62,46 @@ class Passwordreset{
                 $this->pdo->rollBack(); 
             }
 
+            //メールの利用者名前を取得(メールは1人しか利用できない)
+            $query = "SELECT user_name FROM users WHERE email = ?";
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute(array($email));
+            $user_name = $stmt->fetchColumn();
             
+           /*  
+            $mail = new PHPMailer();
+            $mail->isSMTP();
+            $mail->Host = 'mail1022.onamae.ne.jp';
+            $mail->SMTPAuth = true;
+            $mail->Port = 465;
+            $mail->Username = 'okaimono@marutani098723.com';
+            $mail->Password = 'Okym2349!';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // 暗号化（TLS）
+            $mail->CharSet = 'UTF-8';
+            $_SESSION['email'] = $email;
             
+            $mail->setFrom('okaimono@marutani098723.com', 'Yui Marutani');
+            $mail->addAddress("$email", "$user_name 様");
+            $mail->Subject = 'お買い物管理アプリパスワードリセットについて';
+            // HTML設定
+            $mail->isHTML(TRUE);
+            $mail->Body = "<html>お買い物管理アプリをご利用いただき有難うございます。<br>24時間以内に以下リンクを押し、パスワードをリセットして下さい。</br><a href='https://marutani098723.com/new_app/passwordReset.php?csrfToken= {$passwordResetToken}'>パスワードリセット</a></html>";
+            
+            $mail->AltBody = '';
+            
+            // メッセージを送信
+            if(!$mail->send()){
+                echo 'メッセージを送信できませんでした。';
+                echo 'エラー内容: ' . $mail->ErrorInfo;
+            } else {
+                echo 'メッセージが送信されました';
+            } */
+            //Create an instance; passing `true` enables exceptions
             //メールアドレス宛てにresetリンクを送る
             $mail = new PHPMailer(true);
             try {
                 //Server settings
-                $mail->SMTPDebug = 0;                      //Enable verbose debug output
+                $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
                 $mail->isSMTP();                                            //Send using SMTP
                 $mail->Host       = 'mail1022.onamae.ne.jp';                     //Set the SMTP server to send through
                 $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
@@ -76,36 +112,23 @@ class Passwordreset{
                 $mail->CharSet = 'UTF-8';
                 $_SESSION['email'] = $email;
 
-                //メールの利用者名前を取得(メールは1人しか利用できない)
-                $query = "SELECT user_name FROM users WHERE email = ?";
-                $stmt = $this->pdo->prepare($query);
-                $result = $stmt->execute(array($email));
-                $user_name = $stmt->fetchColumn();
-
                 //Recipients
                 $mail->setFrom('okaimono@marutani098723.com', 'お買い物アプリ事務局');
-                $mail->addAddress("$email", "$user_name 様");     //Add a recipient
+                $mail->addAddress("$email", "$user_name様");     //Add a recipient
   
                 //Content
                 $mail->isHTML(true);                        //Set email format to HTML
                 $mail->Subject = 'お買い物管理アプリパスワードリセットについて';
                 // HTML設定
                 $mail->isHTML(TRUE);
-                $mail->Body = "$user_name 様";
+                $mail->Body = "<html>お買い物管理アプリをご利用いただき有難うございます。<br>24時間以内に以下リンクを押し、パスワードをリセットして下さい。</br><a href='https://marutani098723.com/new_app/passwordReset.php?csrfToken= {$passwordResetToken}'>パスワードリセット</a></html>";
                 
-                $mail->AltBody = "
-                $user_name 様
-
-                お買い物管理アプリをご利用いただき有難うございます。
-                お手数ですが24時間以内に以下リンクを押し、パスワードをリセットして下さい。
-                <a href='https://marutani098723.com/new_app/passwordReset.php?csrfToken=$csrfToken'>パスワードリセット</a>
-                
-                お買い物事務局一同";
+                $mail->AltBody = '';
             
                 $mail->send();
-                /* echo 'Message has been sent'; */
+                echo 'Message has been sent';
             } catch (Exception $e) {
-                echo "メッセージの送信に失敗しました。 Mailer Error: {$mail->ErrorInfo}";
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
 
             $msg .= 'メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。';
@@ -116,14 +139,16 @@ class Passwordreset{
             
         }
         
-        return $msg;
+       /*  return $msg; */
      
     } 
 
-    //パスワード１とパスワード２が送信された時
     public function passwordVerify($email,$password,$password2,$csrfToken){
         //データベース更新前にパスワードをhash化する
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        //string64をbinary32に変換し比較するため、桁数を縮める
+        $csrfToken = substr($csrfToken, 1, 32);
      
         //password_resetテーブルからトークンとメールが一致するものがあるかカウント
         $sth = $this->pdo->prepare("SELECT * FROM password_reset WHERE email = ? AND token = ?");
@@ -148,27 +173,24 @@ class Passwordreset{
             if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,24}$/', $password)) {
                
             }else{
-                $msg.="新しいパスワードは少なくとも1つの小文字、<br>
-                1つの大文字、<br>
-                1つの数字を含み、<br>
-                8文字以上24文字以下で作成して下さい。<br><br>";
+                $msg.="新しいパスワードは少なくとも1つの小文字、1つの大文字、1つの数字を含み、8文字以上24文字以下で作成して下さい。";
             }
 
             // パスワードが両方合っているか
             if ($password!== $password2) {
-                $msg.= "パスワードが一致しません。<br>";
+                $msg.= "パスワードが一致しません。";
             }
 
             // パスワードを更新
             if($msg==""){
                 $updateStm = $this->pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
                 $updateStm->execute(array($hashedPassword, $email));
-                $msg.= "パスワードが変更されました。<br>ブラウザを閉じて下さい。<br>";
+                $msg.= "パスワードが変更されました。";
             }
            
         } else {
             //データがpassword_resetテーブルに存在しないとき
-            $msg.= "メールアドレスかトークンが不正です。<br>";
+            $msg.= "メールアドレスかトークンが不正です。";
         }
 
         return $msg;

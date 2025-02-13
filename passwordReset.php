@@ -10,12 +10,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $csrfToken = htmlspecialchars($_REQUEST['csrfToken']);
 
     $email = htmlspecialchars($_SESSION['email']);
-    //更新の条件
+    
     //$password1がテーブルに存在しない
     $err_msg = $passre->passwordVerify($email,$password1,$password2,$csrfToken);
-
-
-}else{
 
 }
 ?>

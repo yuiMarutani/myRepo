@@ -58,8 +58,6 @@ class User{
         }else{
             $err_msg.='メールアドレスは不正な形式のメールアドレスです。<br>';
         }
-        
-
         if($password == ''){
             $err_msg.= 'パスワードが入力されていません。<br>';
         }else{

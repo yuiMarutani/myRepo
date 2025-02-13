@@ -1,10 +1,10 @@
 <?php
 
 class Connect{
-    private $host = 'localhost';
-    private $dbName = 'new_app';
-    private $username = 'root';
-    private $password = '';
+    private $host = 'mysql1017.onamae.ne.jp';
+    private $dbName = '0eq3a_new_app';
+    private $username = '0eq3a_yuitns';
+    private $password = 'Y2621031h!';
     private $pdo;
 
     public function __construct() {

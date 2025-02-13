@@ -11,7 +11,6 @@ class Registeruser_db{
     
     //validationチェック
     public function validate_duplicate($USERS_ID, $user_name, $email, $password){
-        $password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "select count(*) from users where USERS_ID=? or email=? or password=?";
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute(array($USERS_ID, $email, $password));
@@ -27,12 +26,11 @@ class Registeruser_db{
 
     public function checkduplicates($USERS_ID, $user_name, $email, $password) {
         //重複のデータを登録できないようにする。行が１行でもあったらだめ
-        $password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "select count(*) from users where USERS_ID=? or email=? or password=?";
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute(array($USERS_ID, $email, $password));
         $rowCount = $stmt->fetchColumn();
-        
+
         $msg = "";
         if ($rowCount > 0) {
             $msg = "ユーザID、メールアドレス、パスワードのいずれかが登録されているので登録できません。";

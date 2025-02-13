@@ -26,7 +26,6 @@ class Passwordreset{
         $sth = $this->pdo->prepare("SELECT * FROM password_reset where email = ?");
         $sth->execute(array($email));
         $data = $sth->fetchAll();
-        
         $count = count($data);
         $msg = '';
 
@@ -105,7 +104,7 @@ class Passwordreset{
                 $mail->send();
                 /* echo 'Message has been sent'; */
             } catch (Exception $e) {
-                echo "メッセージの送信に失敗しました。 Mailer Error: {$mail->ErrorInfo}";
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
 
             $msg .= 'メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。';

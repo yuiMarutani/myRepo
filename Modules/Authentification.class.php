@@ -31,6 +31,7 @@ class Authentification{
         }
         $stmt = null;
         $this->pdo = null;
+        
         return $msg;
     } 
 }

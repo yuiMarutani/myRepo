@@ -1,4 +1,5 @@
 <?php
+
 require_once('Modules/User.Class.php');
 require_once('Modules/Authentification.Class.php');
 session_start();
