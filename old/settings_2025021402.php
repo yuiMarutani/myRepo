@@ -4,32 +4,15 @@ require_once('Modules/Authentification.Class.php');
 require_once('Modules/Settings.Class.php');
 
 session_start();
+print_r($_SESSION);
 //今日の日付
 $date = new DateTime('now');
 $today = $date->format('Y年m月d日');
-
-//$user_idをデータベースから取得
+//$user_idをデータベースから
 $settings = new Settings();
 $user_id = $settings->setUserid($_SESSION['user_name'],$_SESSION['password']);
 $user_id = $settings->getUserid();
-
-//お買い物回数の算出
-$shoppingnum =$settings->shoppingNum($user_id);
-
-//金額のセレクトボックス値
-$selectData=array();
-for($i=5;$i<=20;$i++){
-    array_push($selectData,$i);
-}
-//POSTされた時
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    $earnings = htmlspecialchars($_POST['earnings']);
-    $goal = htmlspecialchars($_POST['goal']);
-    $tax = htmlspecialchars($_POST['tax']);
-}
-
-
-
+print_r($user_id);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -97,7 +80,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 <div class="col py-3">
                     <h5><?php echo $_SESSION['user_name'];?>様</h5>
                     <span><?php echo $today;?></span><br>
-                    <span><?= $shoppingnum;?>回目のお買い物</span>
+                    <span>〇回目のお買い物</span>
                     <div class="container" style="padding:20px;">
                         <div class="row  flex-no-wrap">
                             <div class="col"></div>
@@ -113,37 +96,49 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                               
                             </div>
                             <div class="col" style="padding:100px;">
-                            <form action="" method="post">
+                            <form>
                                 <table class="table table-borderless" style="white-space:nowrap;">
                                     <tr>
                                         <td><font style="color:red;">所持金、目標金額、消費税の設定をお願いします。</font></td>
                                     </tr>
+                                    
                                         <tr>
                                             <td><span style="color:red;">※</span>所持金を登録する（必須）</td>
-                                            <td><input type="text" name="earnings" value="<?php if(isset($earnings)){ echo $earnings;}?>">&nbsp;円</td>
+                                            <td><input type="text">&nbsp;円</td>
                                         </tr>
                                         <tr>
                                             <td>目標金額の設定（任意）</td>
-                                            <td><input type="text" name="goal" value="<?php if(isset($goal)){ echo $goal;} ?>">&nbsp;円</td>
+                                            <td><input type="text">&nbsp;円</td>
                                         </tr>
                                         <tr>
                                             <td><span style="color:red;">※</span>消費税額の設定</td>
                                             <td>
-                                                <select style="width:60px;" name="tax">
-                                                    <?php foreach($selectData as $data){ ?>
-                                                        <?php if(isset($tax)&& $tax==$data){?>
-                                                            <option value="<?=$tax ?>" selected><?=$tax?>%</option>
-                                                        <?php }else{?>
-                                                        <option value="<?=$data?>"><?=$data ?>%</option>
-                                                        <?php } ?>
-                                                    <?php }?>
+                                                <select style="width:60px;">
+                                                    <option>5%</option>
+                                                    <option>6%</option>
+                                                    <option>7%</option>
+                                                    <option>8%</option>
+                                                    <option>9%</option>
+                                                    <option>10%</option>
+                                                    <option>11%</option>
+                                                    <option>12%</option>
+                                                    <option>13%</option>
+                                                    <option>14%</option>
+                                                    <option>15%</option>
+                                                    <option>16%</option>
+                                                    <option>17%</option>
+                                                    <option>18%</option>
+                                                    <option>19%</option>
+                                                    <option>20%</option>
+                                                    <option>21%</option>
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td><button type="submit" class="btn btn-primary" name="register">登録</button></td>
+                                            <td><button type="button" class="btn btn-primary">登録</button></td>
                                         </tr>
+                                        
                                 </table>
                             </form>
                             </div>

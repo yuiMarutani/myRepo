@@ -1,6 +1,7 @@
 <?php 
 session_start();
 print_r($_SESSION);
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -71,7 +72,7 @@ print_r($_SESSION);
                 </div>
                 <!--右サイド-->
                 <div class="col py-3">
-                    <h5>丸谷結衣様</h5>
+                    <h5><?php echo $_SESSION['user_name'];?>様</h5>
                     <div class="container-fluid" style="padding:20px;">
                         <div class="row">
                             <div class="col ">
