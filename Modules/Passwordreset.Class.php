@@ -17,6 +17,7 @@ class Passwordreset{
         $database = new Connect();
         $this->pdo = $database->getPDO();
         $sessionob = session_start();
+       
     }
     
     public function authorize($email,$_csrf_token){
@@ -171,6 +172,6 @@ class Passwordreset{
             $msg.= "メールアドレスかトークンが不正です。<br>";
         }
         
-        return $msg;;
+        return $msg;
     }
 }

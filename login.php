@@ -36,6 +36,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     <header><img src="image/vegetables.jpg" alt="..."></header>
     <!--main-->
     <main>
+        <p style="text-align:right;"><a href="https://www.freepik.com/" target="_blank">Designed by Freepik</a></p>
         <div class="container">
             <h1>お買い物管理アプリ</h1>
             <h2>ログイン</h2>

@@ -22,42 +22,42 @@ print_r($_SESSION);
     <!--main-->
     <main>
         <div class="container-fluid" style="white-space:nowrap;">
-            <div class="row flex-nowrap">
-                <div class="bg-dark col-auto col-md-3 min-vh-100">
+            <div class="row flex-no-wrap">
+                <div class="bg-dark col-auto col-md-2 min-vh-100">
                     <div class="bg-dark p-2">
                         <a class="d-flex text-decoration-none mt-1 align-items-center text-white">
                             <i class="fs-5 fa fa-gauge"></i><span class="fs-4 d-none d-sm-inline">お買い物管理</span>
                         </a>
                         <nav class="nav nav-pills flex-column mt-4">
-                            <ul class="nav flex-column">
+                            <ul>
                                 <li class="nav-item">
                                     <a href="wrapper.php" class="nav-link text-white">
-                                        <span class="fs-5">アプリ概要</span>
+                                        <span class="fs-5 d-none d-sm-inline">アプリ概要</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="settings.php" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-cog"></i><span class="fs-5">設定</span>
+                                        <i class="fs-5 fa fa-cog"></i><span class="fs-5 d-none d-sm-inline">設定</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="registerCommodity.php" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-registered"></i><span class="fs-5">候補登録</span>
+                                        <i class="fs-5 fa fa-registered"></i><span class="fs-5 d-none d-sm-inline">候補登録</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="confirm.php" class="nav-link text-white active">
-                                        <i class="fs-5 fa fa-check"></i><span class="fs-5">購入確定</span>
+                                        <i class="fs-5 fa fa-check"></i><span class="fs-5 d-none d-sm-inline">購入確定</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="history.php" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-history"></i><span class="fs-5">購入履歴</span>
+                                        <i class="fs-5 fa fa-history"></i><span class="fs-5 d-none d-sm-inline">購入履歴</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="login.php" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-sign-out"></i><span class="fs-5">ログアウト</span>
+                                        <i class="fs-5 fa fa-sign-out"></i><span class="fs-5 d-none d-sm-inline">ログアウト</span>
                                     </a>
                                 </li>
                             </ul>

@@ -14,18 +14,13 @@ $user_id = $settings->setUserid($_SESSION['user_name'],$_SESSION['password']);
 $user_id = $settings->getUserid();
 
 //お買い物回数の算出
-$shoppingnum = $settings->shoppingNum($user_id);
+$shoppingnum =$settings->shoppingNum($user_id);
 
 //金額のセレクトボックス値
-$selectData = array();
+$selectData=array();
 for($i=5;$i<=20;$i++){
     array_push($selectData,$i);
 }
-
-//デフォルトで既にデータの登録があるとき
-/* $dataexists = $settings->dataVerify($user_id,$shopping_num); */
-//登録でなく、更新できる状態にする　（updateDB==1 updatedb=""）id等の情報get
-
 //POSTされた時
 if($_SERVER['REQUEST_METHOD']=='POST'){
     //$earnings
@@ -34,38 +29,31 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $earnings = $settings->setEarnings($earnings);
         $earnings = $settings->getEarnings($earnings);
     }
-    print_r($_POST);
     if(isset($_POST['goal'])){
         $goal = htmlspecialchars($_POST['goal']);
         $goal = $settings->setGoal($goal);
         $goal = $settings->getGoal($goal);
     }
-
     if(isset($_POST['tax'])){
         $tax = htmlspecialchars($_POST['tax']);
         $tax = $settings->setTax($tax);
         $tax = $settings->setTax($tax);
     }
-
     if(isset($_POST['submit1'])){
         $submit1 = htmlspecialchars($_POST['submit1']);
     }
-
     //編集ボタン
     if(isset($_POST['edit'])){
         $edit = htmlspecialchars($_POST['edit']);
     }
-    
     //登録ボタン
     if(isset($_POST['register'])){
         $register = htmlspecialchars($_POST['register']);
     }
-
     //更新ボタン
     if(isset($_POST['updatedb'])){
         $updatedb = htmlspecialchars($_POST['updatedb']);
     }
-
     //リセットボタン
     if(isset($_POST['reset'])){
         $reset = htmlspecialchars($_POST['reset']);
@@ -106,7 +94,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $dbdelete = $settings->deleteDB($user_id,$shoppingnum);
     }
     
-    //ログアウト処理がされたとき
+    //ログアウト処理がされた時
  
 
    
@@ -137,7 +125,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     <main>
     <div class="container-fluid" style="white-space:nowrap;">
         <div class="row flex-nowrap">
-            <div class="bg-dark col-auto col-md-3 min-vh-100">
+            <div class="bg-dark col-auto col-md-2 min-vh-100">
                 <div class="bg-dark p-2">
                     <a class="d-flex text-decoration-none mt-1 align-items-center text-white">
                         <i class="fs-5 fa fa-gauge"></i><span class="fs-4  d-sm-inline">お買い物管理</span>
@@ -212,11 +200,11 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td><span style="color:red;">※</span>所持金を登録する（必須）</td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) && $updateDB==1 ){ ?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && $updateDB==1 ){ ?>
                             
                                                     <?=$earnings ?>円 &nbsp;&nbsp;&nbsp;
                                                     <!--更新ボタンが再度押された時hiddenで最初のページに送信-->
-                                                    <?php if(isset($updatedb) && isset($updateDB)&& $updateDB==1 ){ ?>
+                                                    <?php if(isset($updatedb) && $updateDB==1){ ?>
                                                         <form action="" method="post">
                                                         <input type="hidden" name="earnings" value="<?=$earnings?>">
                                                         <input type="hidden" name="goal" value="<?=$goal?>">
@@ -231,7 +219,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td>目標金額の設定（任意）</td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) && $updateDB==1){ ?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && $updateDB==1){ ?>
                                                     <?=$goal?>円&nbsp;&nbsp;&nbsp;
                                             <?php }else{ ?>
                                                     <input type="text" name="goal" value="<?php if(isset($goal)){ echo $goal;} ?>">&nbsp;円<span style="color:green;"><?php if(isset($error_2)){echo $error_2;}?></span>
@@ -241,7 +229,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td><span style="color:red;">※</span>消費税額の設定</td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) &&  $updateDB==1){ ?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1){ ?>
                                                 <?=$tax?> %
                                             <?php }else{ ?>
                                                 <select style="width:60px;" name="tax">
@@ -259,7 +247,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) &&  $updateDB==1){?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && $updateDB==1){?>
                                                 <div style="display:flex;justify-content:center;">
                                                     <form action="" method="post">
                                                         <input type="hidden" name="goal" value="<?=$goal?>">
@@ -277,7 +265,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                                     </form>
                                                 </div>
                                             <?php }else{ ?>
-                                                    <?php if(isset($edit)|| isset($updatedb) || isset($updateDB) && $updateDB==1){ ?>
+                                                    <?php if(isset($edit)|| isset($updatedb) && $updateDB==1){ ?>
                                                             <button type="submit" class="btn btn-primary" name="updatedb">更新</button>
                                                     <?php }else{ ?>
                                                             <button type="submit" class="btn btn-primary" name="register">登録</button>

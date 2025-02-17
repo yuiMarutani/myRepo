@@ -35,4 +35,13 @@ class Authentification{
         
         return $msg;
     } 
+
+    //ログアウト処理
+    function logout(){
+        // セッション変数を全て解除
+        $_SESSION = array();
+
+        // セッションを破棄
+        session_destroy();
+    }
 }

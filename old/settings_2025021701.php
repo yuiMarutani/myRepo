@@ -14,58 +14,47 @@ $user_id = $settings->setUserid($_SESSION['user_name'],$_SESSION['password']);
 $user_id = $settings->getUserid();
 
 //お買い物回数の算出
-$shoppingnum = $settings->shoppingNum($user_id);
+$shoppingnum =$settings->shoppingNum($user_id);
 
 //金額のセレクトボックス値
-$selectData = array();
+$selectData=array();
 for($i=5;$i<=20;$i++){
     array_push($selectData,$i);
 }
-
-//デフォルトで既にデータの登録があるとき
-/* $dataexists = $settings->dataVerify($user_id,$shopping_num); */
-//登録でなく、更新できる状態にする　（updateDB==1 updatedb=""）id等の情報get
-
 //POSTされた時
 if($_SERVER['REQUEST_METHOD']=='POST'){
+    print_r($_POST);
     //$earnings
     if(isset($_POST['earnings'])){
         $earnings = htmlspecialchars($_POST['earnings']);
         $earnings = $settings->setEarnings($earnings);
         $earnings = $settings->getEarnings($earnings);
     }
-    print_r($_POST);
     if(isset($_POST['goal'])){
         $goal = htmlspecialchars($_POST['goal']);
         $goal = $settings->setGoal($goal);
         $goal = $settings->getGoal($goal);
     }
-
     if(isset($_POST['tax'])){
         $tax = htmlspecialchars($_POST['tax']);
         $tax = $settings->setTax($tax);
         $tax = $settings->setTax($tax);
     }
-
     if(isset($_POST['submit1'])){
         $submit1 = htmlspecialchars($_POST['submit1']);
     }
-
     //編集ボタン
     if(isset($_POST['edit'])){
         $edit = htmlspecialchars($_POST['edit']);
     }
-    
     //登録ボタン
     if(isset($_POST['register'])){
         $register = htmlspecialchars($_POST['register']);
     }
-
     //更新ボタン
     if(isset($_POST['updatedb'])){
         $updatedb = htmlspecialchars($_POST['updatedb']);
     }
-
     //リセットボタン
     if(isset($_POST['reset'])){
         $reset = htmlspecialchars($_POST['reset']);
@@ -106,8 +95,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $dbdelete = $settings->deleteDB($user_id,$shoppingnum);
     }
     
-    //ログアウト処理がされたとき
- 
 
    
 }
@@ -134,50 +121,49 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     <header></header>
     <!--main-->
     <main>
-    <main>
-    <div class="container-fluid" style="white-space:nowrap;">
-        <div class="row flex-nowrap">
-            <div class="bg-dark col-auto col-md-3 min-vh-100">
-                <div class="bg-dark p-2">
-                    <a class="d-flex text-decoration-none mt-1 align-items-center text-white">
-                        <i class="fs-5 fa fa-gauge"></i><span class="fs-4  d-sm-inline">お買い物管理</span>
-                    </a>
-                    <nav class="nav nav-pills flex-column flex-md-column mt-4">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a href="wrapper.php" class="nav-link text-white">
-                                    <span class="fs-5  d-sm-inline">アプリ概要</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="settings.php" class="nav-link text-white active">
-                                    <i class="fs-5 fa fa-cog"></i><span class="fs-5  d-sm-inline">設定</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="registerCommodity.php" class="nav-link text-white">
-                                    <i class="fs-5 fa fa-registered"></i><span class="fs-5  d-sm-inline">候補登録</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="confirm.php" class="nav-link text-white">
-                                    <i class="fs-5 fa fa-check"></i><span class="fs-5  d-sm-inline">購入確定</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="history.php" class="nav-link text-white">
-                                    <i class="fs-5 fa fa-history"></i><span class="fs-5  d-sm-inline">購入履歴</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="login.php" class="nav-link text-white">
-                                    <i class="fs-5 fa fa-sign-out"></i><span class="fs-5  d-sm-inline">ログアウト</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+        <div class="container-fluid" style="white-space:nowrap;">
+            <div class="row flex-no-wrap">
+                <div class="bg-dark col-auto col-md-2 min-vh-100">
+                    <div class="bg-dark p-2">
+                        <a class="d-flex text-decoration-none mt-1 align-items-center text-white">
+                            <i class="fs-5 fa fa-gauge"></i><span class="fs-4 d-none d-sm-inline">お買い物管理</span>
+                        </a>
+                        <nav class="nav nav-pills flex-column mt-4">
+                            <ul>
+                                <li class="nav-item">
+                                    <a href="wrapper.php" class="nav-link text-white">
+                                        <span class="fs-5 d-none d-sm-inline">アプリ概要</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="settings.php" class="nav-link text-white active">
+                                        <i class="fs-5 fa fa-cog"></i><span class="fs-5 d-none d-sm-inline">設定</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="registerCommodity.php" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-registered"></i><span class="fs-5 d-none d-sm-inline">候補登録</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="confirm.php" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-check"></i><span class="fs-5 d-none d-sm-inline">購入確定</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="history.php" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-history"></i><span class="fs-5 d-none d-sm-inline">購入履歴</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="login.php" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-sign-out"></i><span class="fs-5 d-none d-sm-inline">ログアウト</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-            </div>
                 <!--右サイド-->
                 <div class="col py-3">
                     <h5><?php echo $_SESSION['user_name'];?>様</h5>
@@ -212,11 +198,11 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td><span style="color:red;">※</span>所持金を登録する（必須）</td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) && $updateDB==1 ){ ?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && $updateDB==1 ){ ?>
                             
                                                     <?=$earnings ?>円 &nbsp;&nbsp;&nbsp;
                                                     <!--更新ボタンが再度押された時hiddenで最初のページに送信-->
-                                                    <?php if(isset($updatedb) && isset($updateDB)&& $updateDB==1 ){ ?>
+                                                    <?php if(isset($updatedb) && $updateDB==1){ ?>
                                                         <form action="" method="post">
                                                         <input type="hidden" name="earnings" value="<?=$earnings?>">
                                                         <input type="hidden" name="goal" value="<?=$goal?>">
@@ -231,7 +217,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td>目標金額の設定（任意）</td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) && $updateDB==1){ ?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && $updateDB==1){ ?>
                                                     <?=$goal?>円&nbsp;&nbsp;&nbsp;
                                             <?php }else{ ?>
                                                     <input type="text" name="goal" value="<?php if(isset($goal)){ echo $goal;} ?>">&nbsp;円<span style="color:green;"><?php if(isset($error_2)){echo $error_2;}?></span>
@@ -241,7 +227,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td><span style="color:red;">※</span>消費税額の設定</td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) &&  $updateDB==1){ ?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1){ ?>
                                                 <?=$tax?> %
                                             <?php }else{ ?>
                                                 <select style="width:60px;" name="tax">
@@ -259,7 +245,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) &&  $updateDB==1){?>
+                                            <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && $updateDB==1){?>
                                                 <div style="display:flex;justify-content:center;">
                                                     <form action="" method="post">
                                                         <input type="hidden" name="goal" value="<?=$goal?>">
@@ -277,7 +263,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                                     </form>
                                                 </div>
                                             <?php }else{ ?>
-                                                    <?php if(isset($edit)|| isset($updatedb) || isset($updateDB) && $updateDB==1){ ?>
+                                                    <?php if(isset($edit)|| isset($updatedb) && $updateDB==1){ ?>
                                                             <button type="submit" class="btn btn-primary" name="updatedb">更新</button>
                                                     <?php }else{ ?>
                                                             <button type="submit" class="btn btn-primary" name="register">登録</button>

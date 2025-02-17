@@ -8,11 +8,17 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $password1 = htmlspecialchars($_POST['password1']);
     $password2 = htmlspecialchars($_POST['password2']);
     $csrfToken = htmlspecialchars($_REQUEST['csrfToken']);
-
-    $email = htmlspecialchars($_SESSION['email']);
+    if(isset($_SESSION['email'])){
+        $email = htmlspecialchars($_SESSION['email']);
+    }
     
-    //$password1がテーブルに存在しない
-    $err_msg = $passre->passwordVerify($email,$password1,$password2,$csrfToken);
+    if(isset($_SESSION['email'])){
+        //$password1がテーブルに存在しない
+        $err_msg = $passre->passwordVerify($email,$password1,$password2,$csrfToken);
+    }else{
+        $err_msg = "セッション切れです。<br>メール送信からやり直してください。<br>";
+    }
+    
     
 }
 ?>
