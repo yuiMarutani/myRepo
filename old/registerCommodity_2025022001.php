@@ -337,28 +337,14 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 </script>
                                                 <!--ファイルの再選択-->
                                                 <script>
-                                                    document.getElementById('fileInput').addEventListener('change', function(event) {
-                                                        var fileName = this.files.length ? this.files[0].name : '';
-                                                        document.getElementById('fileName').value = fileName;
-
-                                                        const file = event.target.files[0];
-                                                        const formData = new FormData();
-                                                        formData.append('file', file);
-                                                        formData.append('fileName', fileName); // ファイル名を追加
-                                                        fetch('https://marutani098723.com/new_app/uploads', {
-                                                            method: 'POST',
-                                                            body: formData
-                                                        })
-                                                        .then(response => response.json())
-                                                        .then(data => {
-                                                            console.log('Success:', data);
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('Error:', error);
-                                                        });
-                                                    });
-
-                                                    document.getElementById('fileInput').addEventListener('click', function() {
+                                                   document.getElementById('fileInput').addEventListener('change', function() {
+                                                    var fileName = this.files.length ? this.files[0].name : '';
+                                                    document.getElementById('fileName').value = fileName;
+                                                });
+                                                </script>
+                                                <!--ボタンが押されたらコンテンツを消す-->
+                                                <script>
+                                                   document.getElementById('fileInput').addEventListener('click', function() {
                                                         var imageElement = document.getElementById('image');
                                                         if (imageElement) {
                                                             imageElement.remove();

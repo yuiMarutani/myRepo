@@ -2,22 +2,33 @@
 session_start();
 require_once('Modules/registerCommodity.Class.php');
 
-print_r($_SESSION);
-
 print_r($_POST);
+
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $name = htmlspecialchars($_POST['name']);
     $price = htmlspecialchars($_POST['price']);
     $amount = htmlspecialchars($_POST['amount']);
     $tax = htmlspecialchars($_POST['tax']);
-    $image = htmlspecialchars($_POST['image']);
     $memo = htmlspecialchars($_POST['memo']);
+    //画像のディレクトリ
+    if(isset($_POST['image_dir'])){
+        $image_dir = htmlspecialchars($_POST['image_dir']);
+    }
+
+    if(isset($_POST['image'])){
+        $image = htmlspecialchars($_POST['image']);
+    }
+    
     $registerC = new registerCommodity();
+
+    //合計金額
     $total = $registerC->Total($price,$tax,$amount); 
 
+    //戻るボタンが押されたとき
     if(isset($_POST['back'])){
         $back = htmlspecialchars($_POST['back']);
     }
+
     if(isset($back)){
         //headerで戻る
         $_SESSION['name'] = $name;
@@ -26,13 +37,16 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $_SESSION['tax'] = $tax;
         $_SESSION['image'] = $image;
         $_SESSION['memo'] = $memo;
-
         $name = $_SESSION['name'];
         $price =  $_SESSION['price'];
         $amount = $_SESSION['amount'];
         $tax = $_SESSION['tax'];
-        $image = $_SESSION['image'];
+        if(isset($image_dir)){
+            $_SESSION['image_dir'] = $image_dir;
+        }
+
         $memo = $_SESSION['memo'];
+        $_SESSION['back'] = 1; //戻るボタンのフラグ
         header('location:registerCommodity.php');
         exit();
     }
@@ -127,8 +141,8 @@ if(isset($_SESSION) && empty($_SESSION)){
                             <div class="col">
                             </div>
                             <div class="col" style="white-space:nowrap;">
-                            <?php if(isset($image)){ ?>
-                                <img src="<?=$image ?>"><?=$image?><br>
+                            <?php if(isset($image_dir)){ ?>
+                                <img src="<?=$image_dir?>" alt="画像"><br>
                             <?php } ?>
                                 
                             </div>
@@ -182,8 +196,13 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     <input type="hidden" name="tax" value="<?=$tax ?>" id="hidden2">
                                     <input type="hidden" name="amount" value="<?=$amount ?>" id="hidden3">
                                     <input type="hidden" name="price" value="<?=$price ?>" id="hidden4">
-                                    <input type="hidden" name="image" value="<?=$image ?>" id="hidden5">
                                     <input type="hidden" name="memo" value="<?=$memo ?>" id="hidden6">
+                                    <?php if(isset($image_dir)){?>
+                                        <input type="hidden" name="image_dir" value="<?=$image_dir ?>" id="hidden7">
+                                    <?php }?>
+                                    <?php if(isset($image)){?>
+                                        <input type="hidden" name="image" value="<?=$image ?>" id="hidden8">
+                                    <?php }?>
                                     <button type="submit" name="back" id="button1" class="btn btn-secondary" value="1">戻る</button>
                                 </form>&nbsp;
                               
@@ -192,7 +211,6 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     <input type="hidden" name="tax" value="<?=$tax ?>">
                                     <input type="hidden" name="amount" value="<?=$amount ?>">
                                     <input type="hidden" name="price" value="<?=$price ?>">
-                                    <input type="hidden" name="image" value="<?=$image ?>">
                                     <input type="hidden" name="memo" value="<?=$memo ?>">
                                     <button type="submit" name="confirm" class="btn btn-primary" onclick="location.href='registerCommodity.php'">候補確定</button>
                                 </form>

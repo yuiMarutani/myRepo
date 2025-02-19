@@ -23,7 +23,7 @@ class registerCommodity extends Settings{
     }
 
     //商品データのバリデーション
-    function validateCommodity($name,$price,$amount,$image){
+    function validateCommodity($name,$price,$amount){
         
         $error_1 = "";
         //エラー１商品名
@@ -71,15 +71,42 @@ class registerCommodity extends Settings{
         }
         
        
-        $error_4 = "";
-        //エラー４画像
-        if(isset($image)){
-            //画像が入力されていたら、エラーを調査
-            $error_4.="";
-        }
-
         
-        return array($error_1,$error_2,$error_3,$error_4);
+        return array($error_1,$error_2,$error_3);
+    }
+
+    function validateFile(){
+        $error_4 = "";
+        //エラー４画像($_FILES['image'])
+        if(isset($_FILES['image']['name'])&& $_FILES['image']['name']!==""){
+            //画像が入力されていたら、エラーを調査
+            //https://ittrip.xyz/php/php-file-upload-basics#index_id21参照
+            //ファイルタイプ
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+            $fileTmpPath = $_FILES['image']['type']; // Correct temporary file path
+            
+            if (!in_array($fileTmpPath, $allowedTypes)) {
+                $error_4 .= "許可されていないファイル形式です。<br>";
+            }
+
+            //ファイルのサニタイズ
+           // 許可する文字のみを含む正規表現パターン
+            $fileName = $_FILES['image']['name'];
+            $pattern = '/^[a-zA-Z0-9_\-\.]+$/';
+            if (!preg_match($pattern, $fileName)) {
+                $error_4 .= "ファイル名に使用できない文字が含まれているか、長さが不適切です。<br>";
+            }
+
+            //ファイルサイズ
+            $maxSize = 2 * 1024 * 1024; // 2MB
+            $fileSize = $_FILES['image']['size'];
+
+            if ($fileSize > $maxSize) {
+                $error_4.= "ファイルサイズが大きすぎます。<br>2MB以下のファイルをアップロードしてください。<br>";
+            }
+
+        }
+        return $error_4;
     }
 
     function Total($price,$tax,$amount){
@@ -91,5 +118,17 @@ class registerCommodity extends Settings{
 
         return $total;
     }
-  
+
+    function uploadImage($image){
+        $uploadDir = 'uploads/';
+        $date = time();
+        $uploadFile = $uploadDir . basename($date."_".$_FILES['image']['name']);
+    
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+            /* $msg =  "ファイルは正常にアップロードされました。"; */
+        } else {
+          /*   $msg =  "ファイルのアップロードに失敗しました。"; */
+        }
+        return $uploadFile;
+    }
 }

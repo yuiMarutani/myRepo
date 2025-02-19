@@ -1,7 +1,7 @@
 <?php 
 session_start();
 require_once('Modules/registerCommodity.Class.php');
-print_r($_SESSION);
+
 //セレクトボックス値作成（taxの作成）
 $arlist = array();
 for($i=5;$i<=20;$i++){
@@ -31,13 +31,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $tax = htmlspecialchars($_POST['tax']);
     $image = $_FILES['image']['name'];
     $memo = htmlspecialchars($_POST['memo']);
-    
+    print_r($_SESSION);
     //イメージ画像の写真がアップされていたら
     if(isset($image) && $image!==""){
         //イメージをuploadsフォルダへ移動
         $movefile = $registerC->uploadImage($image);
             //画像を生成後、ディレクトリ含むパス
         $image_dir = 'https://marutani098723.com/new_app/'.$movefile;
+        $image = $_SESSION['image_dir'];
         
     }
     
@@ -78,19 +79,18 @@ if(isset($_SESSION['tax'])){
     $tax = $_SESSION['tax'];
     unset($_SESSION['tax']);
 }
+if(isset($_SESSION['image'])){
+    $image = $_SESSION['image'];
+    unset($_SESSION['image']);
+}
 
 if(isset($_SESSION['memo'])){
     $memo = $_SESSION['memo'];
     unset($_SESSION['memo']);
 }
-
-if(isset($_SESSION['image_dir'])){
-    /* unset($_SESSION['image_dir']); */
-}
 if(isset($_SESSION['back'])){
     $again_msg = "お手数ですが、もう一度画像をアップロードして下さい。";
 }
-
 //セッション切れリダイレクト
 if(isset($_SESSION) && empty($_SESSION)){
     header('Location: https://marutani098723.com/new_app/login.php');
@@ -223,14 +223,12 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     <tr>
                                         <td>
                                             <!--再アップロードのメッセージ表示-->
-                                            <?php if(isset($_SESSION['back']) && isset($_SESSION['image_dir'])){ ?>
+                                            <?php if(isset($again_msg) && isset($_SESSION['image_dir'])){ ?>
                                                 <div class="alert alert-danger" role="alert">
                                                     <?=$again_msg?>
+                                                    <?php unset($_SESSION['back']);?>
                                                 </div>   
                                             <?php }?>
-                                            <?php unset($_SESSION['image_dir']);?>
-                                            <?php unset($_SESSION['back']);?>
-                                            <?php unset($_SESSION['image']);?>
                                             <label for="name">商品名</label>
                                             <div style="color:red;">
                                                 <?php if(isset($error_1)){echo $error_1;}?>
@@ -287,11 +285,12 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 <?php if(isset($error_4)){echo $error_4;}?>
                                             </div>
                                             <div class="mb-3">
-                                                <?php if(isset($image_dir) && $image_dir!==""){?>
-                                                    <img id="image" src="<?=$image_dir?>" alt="画像イメージ">
+                                                <?php if(isset($_SESSION['img_dir'])){?>
+                                                    <img id="image" src="<?=$_SESSION['img_dir'];?>" alt="画像イメージ">
+                                                    <?php $_SESSION['image_dir'] = $image_dir;?>
                                                 <?php }?>
                                                 <div class="input-group mb-3">
-                                                    <?php if(isset($image_dir)){?>
+                                                    <?php if(isset($image)){?>
                                                         <!--プレビュー-->
                                                         <div class="preview">
                                                             <div class="file">
@@ -304,7 +303,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                         </div>
                                                         <!--プレビュー終了-->
                                                         <label class="input-group-text" for="fileInput">ファイルの再選択</label>
-                                                        <input type="text" class="form-control" id="fileName" name="image">
+                                                        <input type="text" class="form-control" id="fileName">
                                                     <?php }else{?>
                                                         <!--画像プレビュー-->
                                                         <div class="preview">
@@ -337,28 +336,14 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 </script>
                                                 <!--ファイルの再選択-->
                                                 <script>
-                                                    document.getElementById('fileInput').addEventListener('change', function(event) {
-                                                        var fileName = this.files.length ? this.files[0].name : '';
-                                                        document.getElementById('fileName').value = fileName;
-
-                                                        const file = event.target.files[0];
-                                                        const formData = new FormData();
-                                                        formData.append('file', file);
-                                                        formData.append('fileName', fileName); // ファイル名を追加
-                                                        fetch('https://marutani098723.com/new_app/uploads', {
-                                                            method: 'POST',
-                                                            body: formData
-                                                        })
-                                                        .then(response => response.json())
-                                                        .then(data => {
-                                                            console.log('Success:', data);
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('Error:', error);
-                                                        });
-                                                    });
-
-                                                    document.getElementById('fileInput').addEventListener('click', function() {
+                                                   document.getElementById('fileInput').addEventListener('change', function() {
+                                                    var fileName = this.files.length ? this.files[0].name : '';
+                                                    document.getElementById('fileName').value = fileName;
+                                                });
+                                                </script>
+                                                <!--ボタンが押されたらコンテンツを消す-->
+                                                <script>
+                                                   document.getElementById('fileInput').addEventListener('click', function() {
                                                         var imageElement = document.getElementById('image');
                                                         if (imageElement) {
                                                             imageElement.remove();
@@ -383,10 +368,6 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             </div>
                                         </td>
                                     </tr>
-                                    <!--postするのでパスをhiddenで送信-->
-                                    <?php if(isset($image_dir)){?>
-                                    <input type="hidden" name="image_dir" value="<?=$image_dir?>">
-                                    <?php } ?>
                                 </form>
                             </div>
                             <div class="col">
