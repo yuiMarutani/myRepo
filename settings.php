@@ -22,9 +22,6 @@ for($i=5;$i<=20;$i++){
     array_push($selectData,$i);
 }
 
-//デフォルトで既にデータの登録があるとき
-/* $dataexists = $settings->dataVerify($user_id,$shopping_num); */
-//登録でなく、更新できる状態にする　（updateDB==1 updatedb=""）id等の情報get
 
 //POSTされた時
 if($_SERVER['REQUEST_METHOD']=='POST'){
@@ -34,7 +31,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $earnings = $settings->setEarnings($earnings);
         $earnings = $settings->getEarnings($earnings);
     }
-    print_r($_POST);
+
     if(isset($_POST['goal'])){
         $goal = htmlspecialchars($_POST['goal']);
         $goal = $settings->setGoal($goal);
@@ -83,6 +80,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         if($error_1=="" && $error_2=="" && $error_3==""){
             //挿入
             $InsertDB = $settings->settingsDBinsert($user_id,$earnings,$goal,$tax,$shoppingnum);
+            $msg = "正常に登録できました。";
         }
     }
 
@@ -94,8 +92,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $error_3 = $error_list[2];//消費税の設定
         //エラーの中身がそれぞれ空なら、settingsテーブルに更新
         if($error_1=="" && $error_2=="" && $error_3==""){
-            //挿入
+            //更新
             $updateDB = $settings->dbUpdate($user_id,$goal,$earnings,$tax,$shoppingnum);
+            $msg = "正常に更新しました。";
         }
         
     }
@@ -104,15 +103,29 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     if(isset($reset)){
         //データベースの情報を削除
         $dbdelete = $settings->deleteDB($user_id,$shoppingnum);
+        $msg = "リセットしました。";
     }
-    
-    //ログアウト処理がされたとき
- 
 
-   
+}else{
+    //デフォルトで既にデータの登録があるとき
+    $data_verify = $settings->dataVerify($user_id,$shoppingnum);
+    if($data_verify>0){
+    //登録でなく、更新できる状態にする　（updateDB==1 updatedb=""）id等の情報get
+        $updatedb = "";
+        $updateDB = 1;
+        //データゲット
+        $data_get = $settings->dataGet($user_id,$shoppingnum);
+        $earnings = $data_get[0];
+        
+        $goal = $data_get[1];
+        $tax = $data_get[2];
+    }
 }
-
-
+//セッション切れはheaderでlogin.phpに飛ばす
+if(isset($_SESSION) && empty($_SESSION)){
+    header('Location: https://marutani098723.com/new_app/login.php');
+}
+//ログアウト処理されたとき
 
 ?>
 <!DOCTYPE html>
@@ -203,10 +216,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                     <tr>
                                         <td>
                                             <?php if(isset($msg)){ ?>
-                                                <font style="color:blue;"><?=$msg ?></font>
+                                                <font style="color:green;">
+                                                    <div class="alert alert-success" role="alert">
+                                                        <?=$msg ?>
+                                                    </div>
+                                                </font>
                                             <?php }?>
-                                            <font style="color:green;"><?php if(isset($error_3)){ echo $error_3;}?></font>
-                                            <font style="color:red;">所持金、目標金額、消費税の設定をお願いします。</font>
+                                            <font style="color:red;"><?php if(isset($error_3)){ echo $error_3;}?></font>
+                                            <font style="color:blue;">所持金、目標金額、消費税の設定をお願いします。</font>
                                         </td>
                                     </tr>
                                     <tr>
@@ -224,17 +241,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                                     <?php }?>
                                                     <!--formで編集　押されたら、ここだけ切り替え-->
                                             <?php }else{?>
-                                                <input type="text" name="earnings" value="<?php if(isset($earnings)){ echo $earnings;}?>">&nbsp;円<span style="color:green;"><?php if(isset($error_1)){echo $error_1;}?></span>
+                                                <input type="text" name="earnings" value="<?php if(isset($earnings)){ echo $earnings;}?>">&nbsp;円<span style="color:red;"><?php if(isset($error_1)){echo $error_1;}?></span>
                                             <?php } ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>目標金額の設定（任意）</td>
+                                        <td>目標金額の設定（任意：設定ないときは0入力）</td>
                                         <td>
                                             <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) && $updateDB==1){ ?>
                                                     <?=$goal?>円&nbsp;&nbsp;&nbsp;
                                             <?php }else{ ?>
-                                                    <input type="text" name="goal" value="<?php if(isset($goal)){ echo $goal;} ?>">&nbsp;円<span style="color:green;"><?php if(isset($error_2)){echo $error_2;}?></span>
+                                                    <input type="text" name="goal" value="<?php if(isset($goal)){ echo $goal;} ?>">&nbsp;円<span style="color:red;"><?php if(isset($error_2)){echo $error_2;}?></span>
                                             <?php }?>
                                         </td>
                                     </tr>
@@ -273,7 +290,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                                                         <input type="hidden" name="goal" value="">
                                                         <input type="hidden" name="earnings" value="">
                                                         <input type="hidden" name="reset" value="1">
-                                                        <button type="submit" class="btn btn-primary" style=" height: 50px;line-height: 40px;" name="submit3">リセット</button>
+                                                        <button type="submit" class="btn btn-primary" style=" height: 50px;line-height: 40px;" name="reset">リセット</button>
                                                     </form>
                                                 </div>
                                             <?php }else{ ?>

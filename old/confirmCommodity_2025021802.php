@@ -20,6 +20,11 @@ if(isset($_SESSION) && empty($_SESSION)){
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <style>
+        .search-box {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
@@ -46,12 +51,12 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="registerCommodity.php" class="nav-link text-white">
+                                    <a href="registerCommodity.php" class="nav-link text-white active">
                                         <i class="fs-5 fa fa-registered"></i><span class="fs-5 d-none d-sm-inline">候補登録</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="confirm.php" class="nav-link text-white active">
+                                    <a href="confirm.php" class="nav-link text-white">
                                         <i class="fs-5 fa fa-check"></i><span class="fs-5 d-none d-sm-inline">購入確定</span>
                                     </a>
                                 </li>
@@ -73,68 +78,71 @@ if(isset($_SESSION) && empty($_SESSION)){
                 <div class="col py-3">
                     <h5>丸谷結衣様</h5>
                     <div class="container" style="padding:20px;">
-                        <div class="row">
+                        <div class="row  flex-no-wrap">
                             <div class="col"></div>
                             <div class="col">
-                                <h3 style="text-align:center;">購入品の確認</h3>
+                                <h3 style="color:red;text-align:center;">確認</h3>
                             </div>
                             <div class="col">
                               
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col"></div>
+                        <div class="row  flex-no-wrap" style="padding:10px;">
                             <div class="col">
-                                <div class="container" style="justify-content:center;">
-                                    <table class="table table-dark table-hover table-responsive text-nowrap" style="">
-                                        <tr>
-                                            <th>品名</th>
-                                            <th>数量</th>
-                                            <th>合計金額（税込み）</th>
+                            </div>
+                            <div class="col" style="white-space:nowrap;">
+                                <img src="image/vegetables.jpg">
+                            </div>
+                            <div class="col">
+                            </div>
+                        </div>
+                        <div class="row  flex-no-wrap" style="padding:10px;">
+                            <div class="col">
+                            </div>
+                            <div class="col" style="white-space:nowrap;">
+                                    <table class="table table-sm table-bordered">
+                                        <tr class="table-active table-primary">
+                                            <td colspan="2" style="text-align:center;">明細</td>
                                         </tr>
                                         <tr>
+                                            <td>商品名</td>
                                             <td>りんご</td>
-                                            <td>〇</td>
+                                        </tr>    
+                                        <tr>
+                                            <td>単価</td>
                                             <td>〇円</td>
                                         </tr>
                                         <tr>
-                                            <td>りんご</td>
-                                            <td>〇</td>
-                                            <td>〇円</td>
+                                            <td>数量</td>
+                                            <td>〇個</td>
                                         </tr>
                                         <tr>
-                                            <td>りんご</td>
-                                            <td>〇</td>
-                                            <td>〇円</td>
+                                            <td>税率</td>
+                                            <td>%</td>
                                         </tr>
                                         <tr>
-                                            <td>りんご</td>
-                                            <td>〇</td>
-                                            <td>〇円</td>
-                                        </tr>
-                                        <tr>
-                                            <td>りんご</td>
-                                            <td>〇</td>
-                                            <td>〇円</td>
-                                        </tr>
-                                        <tr>
-                                            <td>りんご</td>
-                                            <td>〇</td>
+                                            <td>合計金額</td>
                                             <td>〇円</td>
                                         </tr>
                                     </table>
-                                    <div class="mb-3" style="text-align:center;">
-                                        <button type="button" class="btn btn-secondary" onclick="location.href='confirm.php'">戻る</button>
-                                        <button type="button" class="btn btn-success" onclick="location.href='confirm.php'">確定</button>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="col"></div>
+                            <div class="col">
+                                
+                            </div>
                         </div>
-                        
-
+                        <div class="row  flex-no-wrap">
+                            <div class="col">
+                            </div>
+                            <div class="col" style="text-align:center;">
+                                <button type="button" class="btn btn-secondary" onclick="location.href='registerCommodity.php'">戻る</button>
+                                <button type="button" class="btn btn-primary" onclick="location.href='registerCommodity.php'">候補確定</button>
+                            </div>
+                            <div class="col">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!--右サイド終了-->
             </div>
         </div>
     </main>

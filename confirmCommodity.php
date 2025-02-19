@@ -1,6 +1,47 @@
 <?php 
 session_start();
+require_once('Modules/registerCommodity.Class.php');
+
 print_r($_SESSION);
+
+print_r($_POST);
+if($_SERVER['REQUEST_METHOD']=='POST'){
+    $name = htmlspecialchars($_POST['name']);
+    $price = htmlspecialchars($_POST['price']);
+    $amount = htmlspecialchars($_POST['amount']);
+    $tax = htmlspecialchars($_POST['tax']);
+    $image = htmlspecialchars($_POST['image']);
+    $memo = htmlspecialchars($_POST['memo']);
+    $registerC = new registerCommodity();
+    $total = $registerC->Total($price,$tax,$amount); 
+
+    if(isset($_POST['back'])){
+        $back = htmlspecialchars($_POST['back']);
+    }
+    if(isset($back)){
+        //headerで戻る
+        $_SESSION['name'] = $name;
+        $_SESSION['price'] = $price;
+        $_SESSION['amount'] = $amount;
+        $_SESSION['tax'] = $tax;
+        $_SESSION['image'] = $image;
+        $_SESSION['memo'] = $memo;
+
+        $name = $_SESSION['name'];
+        $price =  $_SESSION['price'];
+        $amount = $_SESSION['amount'];
+        $tax = $_SESSION['tax'];
+        $image = $_SESSION['image'];
+        $memo = $_SESSION['memo'];
+        header('location:registerCommodity.php');
+        exit();
+    }
+
+}
+//セッション切れリダイレクト
+if(isset($_SESSION) && empty($_SESSION)){
+    header('Location: https://marutani098723.com/new_app/login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -86,7 +127,10 @@ print_r($_SESSION);
                             <div class="col">
                             </div>
                             <div class="col" style="white-space:nowrap;">
-                                <img src="image/vegetables.jpg">
+                            <?php if(isset($image)){ ?>
+                                <img src="<?=$image ?>"><?=$image?><br>
+                            <?php } ?>
+                                
                             </div>
                             <div class="col">
                             </div>
@@ -101,23 +145,27 @@ print_r($_SESSION);
                                         </tr>
                                         <tr>
                                             <td>商品名</td>
-                                            <td>りんご</td>
+                                            <td><?=$name?></td>
                                         </tr>    
                                         <tr>
                                             <td>単価</td>
-                                            <td>〇円</td>
+                                            <td><?=$price?>&nbsp;&nbsp;円</td>
                                         </tr>
                                         <tr>
                                             <td>数量</td>
-                                            <td>〇個</td>
+                                            <td><?=$amount?>&nbsp;&nbsp;個</td>
                                         </tr>
                                         <tr>
                                             <td>税率</td>
-                                            <td>%</td>
+                                            <td><?=$tax?>&nbsp;&nbsp;%</td>
                                         </tr>
                                         <tr>
                                             <td>合計金額</td>
-                                            <td>〇円</td>
+                                            <td><?=$total?>&nbsp;&nbsp;円</td>
+                                        </tr>
+                                        <tr>
+                                            <td>memo</td>
+                                            <td style ="whitespace:nowrpa;"><?=$memo?></td>
                                         </tr>
                                     </table>
                             </div>
@@ -128,9 +176,26 @@ print_r($_SESSION);
                         <div class="row  flex-no-wrap">
                             <div class="col">
                             </div>
-                            <div class="col" style="text-align:center;">
-                                <button type="button" class="btn btn-secondary" onclick="location.href='registerCommodity.php'">戻る</button>
-                                <button type="button" class="btn btn-primary" onclick="location.href='registerCommodity.php'">候補確定</button>
+                            <div class="col" style="text-align:center;display:flex;justify-content:center;">
+                                <form action="" method="post" id="form1">
+                                    <input type="hidden" name="name" value="<?=$name ?>" id="hidden1" name="myform">
+                                    <input type="hidden" name="tax" value="<?=$tax ?>" id="hidden2">
+                                    <input type="hidden" name="amount" value="<?=$amount ?>" id="hidden3">
+                                    <input type="hidden" name="price" value="<?=$price ?>" id="hidden4">
+                                    <input type="hidden" name="image" value="<?=$image ?>" id="hidden5">
+                                    <input type="hidden" name="memo" value="<?=$memo ?>" id="hidden6">
+                                    <button type="submit" name="back" id="button1" class="btn btn-secondary" value="1">戻る</button>
+                                </form>&nbsp;
+                              
+                                <form action="confirm.php" method="post">
+                                    <input type="hidden" name="name" value="<?=$name ?>">
+                                    <input type="hidden" name="tax" value="<?=$tax ?>">
+                                    <input type="hidden" name="amount" value="<?=$amount ?>">
+                                    <input type="hidden" name="price" value="<?=$price ?>">
+                                    <input type="hidden" name="image" value="<?=$image ?>">
+                                    <input type="hidden" name="memo" value="<?=$memo ?>">
+                                    <button type="submit" name="confirm" class="btn btn-primary" onclick="location.href='registerCommodity.php'">候補確定</button>
+                                </form>
                             </div>
                             <div class="col">
                             </div>

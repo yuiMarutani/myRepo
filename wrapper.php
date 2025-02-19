@@ -4,6 +4,11 @@ require_once('Modules/User.Class.php');
 require_once('Modules/Authentification.Class.php');
 session_start();
 /* print_r($_SESSION); */
+
+//セッション切れリダイレクト
+if(isset($_SESSION) && empty($_SESSION)){
+    header('Location: https://marutani098723.com/new_app/login.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +83,9 @@ session_start();
                     <ul class="list-unstyled">
                         <li>
                             <h5 style="color:pink;">ご使用方法</h5>
-                            1.「設定」より所持金や消費税額、目標金額の設定をします。
+                            1.「設定」より所持金や消費税額、目標金額の設定をします。<br>
+                            ここで設定した消費税は一括で登録されますが、「商品登録」より個別で商品の消費税を変更することが可能です。<br>
+                            目標金額は、決まった金額に収めたい時に設定します。使用しない場合は0を入力して下さい。
                             <div>
                                 <img src="image/settings.png">
                             </div>

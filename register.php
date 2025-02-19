@@ -47,6 +47,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $email = '';
     $password = '';
 }
+
+//セッション切れリダイレクト
+if(isset($_SESSION) && empty($_SESSION)){
+    header('Location: https://marutani098723.com/new_app/login.php');
+}
 ?>
 <?php if($mode  == "validate" || $mode == "return"){ ?>
 <!DOCTYPE html>

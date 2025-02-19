@@ -14,6 +14,7 @@ class Settings{
     function setTax($tax){
         return $this->tax=$tax;
     }
+    
     function getTax($tax){
         return $this->tax;
     }
@@ -60,6 +61,7 @@ class Settings{
         }
         return $shoppingnum;
     }
+    
     function Validation($user_id,$earnings,$goal){
         $error_1 ="";
         $error_2 ="";
@@ -127,5 +129,29 @@ class Settings{
         $del_execute = $stmt->execute(array($user_id,$shoppingnum));
 
         return $del_execute;
+    }
+    
+    //データがあるかどうかを数える
+    function dataVerify($user_id,$shoppingnum){
+        $query = "SELECT * from settings WHERE user_id=? and shoppingnum = ?";
+        $stmt = $this->pdo->prepare($query);
+        $execute = $stmt->execute(array($user_id,$shoppingnum));
+        $result = $stmt->fetchAll();
+        $data_amount = count($result);
+
+        return $data_amount;
+    }
+
+    //データを取得
+    function dataGet($user_id,$shoppingnum){
+        $query = "SELECT * from settings WHERE user_id=? and shoppingnum = ?";
+        $stmt = $this->pdo->prepare($query);
+        $execute = $stmt->execute(array($user_id,$shoppingnum));
+        $result = $stmt->fetchAll();
+        $tax = $result[0]['tax'];
+        $earnings = $result[0]['earnings'];
+        $goal = $result[0]['goal'];
+
+        return array($earnings,$goal,$tax);
     }
 }

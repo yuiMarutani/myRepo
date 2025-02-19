@@ -1,7 +1,10 @@
 <?php 
 session_start();
 print_r($_SESSION);
-
+//セッション切れリダイレクト
+if(isset($_SESSION) && empty($_SESSION)){
+    header('Location: https://marutani098723.com/new_app/login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">

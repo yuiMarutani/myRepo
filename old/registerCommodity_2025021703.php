@@ -1,5 +1,6 @@
 <?php 
 session_start();
+print_r($_SESSION);
 require_once('Modules/registerCommodity.Class.php');
 
 //セレクトボックス値作成（taxの作成）
@@ -19,62 +20,15 @@ $shoppingnum = $registerC->shoppingNum($user_id);
 
 //データの登録があるかないか
 $dataVerify = $registerC->dataVerify($user_id,$shoppingnum);
+print_r($dataVerify);
+
 if($dataVerify>0){
     //データの登録あるとき
-    $tax = $registerC->getTaxData($user_id,$shoppingnum);
+    $tax = $registerC->getTax($user_id,$shoppingnum);
+    print_r($tax);
 }
 
-print_r($_SESSION);
-//$_POSTで渡ってきている時
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    $name = htmlspecialchars($_POST['name']);
-    $price = htmlspecialchars($_POST['price']);
-    $amount = htmlspecialchars($_POST['amount']);
-    $tax = htmlspecialchars($_POST['tax']);
-    $image = htmlspecialchars($_POST['image']);
-    $memo = htmlspecialchars($_POST['memo']);
-    //確認ボタンが押された時
-    if(isset($_POST['submitC'])){
-        $submitC = htmlspecialchars($_POST['submitC']);
-    }
-    
-    list($error_1,$error_2,$error_3,$error_4) = $registerC->validateCommodity($name,$price,$amount,$image);
-    if(isset($error_1) && $error_1=="" && isset($error_2) && $error_2 =="" && isset($error_3) && $error_3=="" && isset($error_4) && $error_4==""){
-        header('location:confirmCommodity.php',true,307);
-    }
-      
-    
-}
 
-//戻るボタンで返ってきたとき
-if(isset($_SESSION['name'])){
-    $name = $_SESSION['name'];
-    unset($_SESSION['name']);
-}
-if(isset($_SESSION['price'])){
-    $price = $_SESSION['price'];
-    unset($_SESSION['price']);
-}
-if(isset($_SESSION['amount'])){
-    $amount = $_SESSION['amount'];
-    unset($_SESSION['amount']);
-}
-if(isset($_SESSION['tax'])){
-    $tax = $_SESSION['tax'];
-    unset($_SESSION['tax']);
-}
-if(isset($_SESSION['image'])){
-    $image = $_SESSION['image'];
-    unset($_SESSION['image']);
-}
-if(isset($_SESSION['memo'])){
-    $memo = $_SESSION['memo'];
-    unset($_SESSION['memo']);
-}
-//セッション切れリダイレクト
-if(isset($_SESSION) && empty($_SESSION)){
-    header('Location: https://marutani098723.com/new_app/login.php');
-}
 
 ?>
 <!DOCTYPE html>
@@ -166,7 +120,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     <form id="form1" action="search.php">
                                         <tr>
                                             <td>
-                                                <div class="input-group" id="searchinput" style="display:flex;justify-content:center;">
+                                                <div class="input-group" id="searchinput">
                                                     <input type="text" name="name" class="form-control" placeholder="商品名の入力" aria-label="" aria-describedby="button-addon2">
                                                     <button class="btn btn-outline-secondary" type="button">検索</button>
                                                 </div>    
@@ -196,41 +150,14 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             form1.style.display = 'none';
                                         }
                                     }
-                                </script>
-                                <form action ="" method="post" class="row g-3">
+                                </script>   
+                                <form>
                                     <tr>
                                         <td>
                                             <label for="name">商品名</label>
-                                            <div style="color:red;">
-                                                <?php if(isset($error_1)){echo $error_1;}?>
+                                            <div class="input-group">
+                                                <input type="text" name="name" class="form-control" id="exampleFormControlInput1">
                                             </div>
-                                            <div class="input-group" style="display:flex; justify-content:center; align-items:center;">
-                                                <input type="text" name="name" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($name)){ echo $name; }?>" style="flex: 1;">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label for="price">単価(１つ当たりの金額)</label>
-                                            <div style="color:red;">
-                                                <?php if(isset($error_2)){echo $error_2;}?>
-                                            </div>
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text">￥</span>
-                                                <input type="text" name="price" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($price)){echo $price;}?>">
-                                            </div>        
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label for="amount">個数</label>
-                                            <div style="color:red;">
-                                                <?php if(isset($error_3)){echo $error_3;}?>
-                                            </div>
-                                            <div class="mb-3 input-group">
-                                                <input type="text" class="form-control" name="amount" id="exampleFormControlInput1" value="<?php if(isset($amount)){echo $amount;} ?>">
-                                                <span class="input-group-text">個</span>
-                                            </div>        
                                         </td>
                                     </tr>
                                     <tr>
@@ -239,11 +166,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             <div class="mb-3">
                                                 <select class="form-select" name="tax">
                                                     <?php foreach($arlist as $rec){?>
-                                                        <?php if($tax == $rec){ ?>
-                                                            <option value="<?=$rec?>" selected><?=$tax?>%</option>
-                                                        <?php }else{ ?>
-                                                            <option value="<?=$rec?>"><?=$rec?>%</option>
-                                                        <?php }?>
+                                                        <option value="<?=$rec?>"><?=$rec?>%</option>
                                                     <?php }?>   
                                                 </select>         
                                             </div>
@@ -251,12 +174,25 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label for="image">画像アップロード</label>
-                                            <div style="color:red;">
-                                                <?php if(isset($error_4)){echo $error_4;}?>
-                                            </div>
+                                            <label for="amount">個数</label>
                                             <div class="mb-3">
-                                                <input type="file" name="image" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($image)){ echo $image;}?>">
+                                                <input type="text" class="form-control" name="amount" id="exampleFormControlInput1">
+                                            </div>        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="price">単価(１つ当たりの金額)</label>
+                                            <div class="mb-3">
+                                                <input type="text" name="price" class="form-control" id="exampleFormControlInput1">
+                                            </div>        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="image">画像アップロード</label>
+                                            <div class="mb-3">
+                                                <input type="file" name="image" class="form-control" id="exampleFormControlInput1">
                                             </div>        
                                         </td>
                                     </tr>
@@ -264,27 +200,25 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         <td>
                                             <div class="mb-3">
                                                 <label for="memo">メモ欄</label>
-                                                <textarea name="memo" size="20" class="form-control"><?php if(isset($memo)){ echo $memo; }?></textarea>
+                                                <textarea name="memo" size="20" class="form-control"></textarea>
                                             </div>      
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="mb-3" style="text-align:center;padding:10px;">
-                                                <button type="submit" name="submitC" class="btn btn-warning" onclick="location.href='confirmCommodity.php'">確認</button>
+                                                <button type="submit" class="btn btn-warning" onclick="location.href='confirmCommodity.php'">確認</button>
                                             </div>
                                         </td>
                                     </tr>
                                 </form>
                             </div>
                             <div class="col">
-                                
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    
-                                </div>
-                                <div class="col">
+                        </div>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
                             <!--登録されたものがここに表示されるので、ここから編集削除、購入確定は確定のみ-->
                             <!-- <ul class="list-group">
                                 <li class="list-group-item">
