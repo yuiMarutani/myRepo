@@ -274,65 +274,33 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td>
                                             <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) &&  $updateDB==1){?>
-                                                <div class="row d-flex justify-content-center">
-                                                <div class="col"></div> 
-                                                <div class="col"></div>    
-                                                <div class="col">
-                                                     <form action="" method="post">
-                                                        <div class="form-group">
-                                                            <input type="hidden" name="goal" value="<?=$goal?>">
-                                                            <input type="hidden" name="earnings" value="<?=$earnings ?>">
-                                                            <input type="hidden" name="tax" value="<?= $tax ?>">
-                                                            <input type="hidden" name="edit" value="1">
-                                                            <button type="submit" class="btn btn-primary"  style="width:75px;" name="edit">編集</button>
-                                                        </div>
-                                                     </form>
-                                                    </div>
-                                                  
-                                                    <div class="col">
-                                                        <form action="" method="post">
-                                                            <div class="form-group">
-                                                                <input type="hidden" name="goal" value="">
-                                                                <input type="hidden" name="earnings" value="">
-                                                                <input type="hidden" name="reset" value="1">
-                                                                <button type="submit" class="btn btn-primary" style="width:75px;" name="reset">リセット</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="col"></div> 
+                                                <div style="display:flex;justify-content:center;">
+                                                    <form action="" method="post">
+                                                        <input type="hidden" name="goal" value="<?=$goal?>">
+                                                        <input type="hidden" name="earnings" value="<?=$earnings ?>">
+                                                        <input type="hidden" name="tax" value="<?= $tax ?>">
+                                                        <input type="hidden" name="edit" value="1">
+                                                        <button type="submit" class="btn btn-primary" style="height: 50px; line-height: 40px;" name="edit">編集</button>
+                                                    </form>
+                                                    &nbsp;&nbsp;
+                                                    <form action="" method="post">
+                                                        <input type="hidden" name="goal" value="">
+                                                        <input type="hidden" name="earnings" value="">
+                                                        <input type="hidden" name="reset" value="1">
+                                                        <button type="submit" class="btn btn-primary" style=" height: 50px;line-height: 40px;" name="reset">リセット</button>
+                                                    </form>
                                                 </div>
-                                                <div></div>
-                                               
                                             <?php }else{ ?>
-                                            <tr>
-                                                <td>
                                                     <?php if(isset($edit)|| isset($updatedb) || isset($updateDB) && $updateDB==1){ ?>
-                                                            <div class="row d-flex justify-content-center">
-                                                                <div class="col"></div>
-                                                                <div class="col"></div>
-                                                                <div class="col"></div>
-                                                                <div class="col"></div>
-                                                                <div class="col">
-                                                                    <button type="submit" class="btn btn-primary" style="width:80px;" name="updatedb">更新</button>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <button type="button" class="btn btn-primary" style="width:auto;" name="cancel" onclick="location.href='settings.php'">キャンセル</button>
-                                                                </div>
-                                                                <div class="col"></div>
-                                                                <div class="col"></div>
-                                                            </div>
-                                                            <?php }else{ ?>
-                                                            <div class="row d-flex justify-content-center">
-                                                                <div class="col"></div>
-                                                                <div class="col">
-                                                                    <button type="submit" class="btn btn-primary" name="register">登録</button>
-                                                                </div>
-                                                            </div>
+                                                            <button type="submit" class="btn btn-primary" name="updatedb">更新</button>
+                                                    <?php }else{ ?>
+                                                            <button type="submit" class="btn btn-primary" name="register">登録</button>
                                                     <?php }?>
-                                                <?php } ?>
-                                                </td>
+                                            <?php } ?>
+                                        </td>
                                     </tr>
                                 </table>
                             </form>

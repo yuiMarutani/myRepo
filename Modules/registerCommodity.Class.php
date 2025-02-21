@@ -121,7 +121,7 @@ class registerCommodity extends Settings{
 
     function uploadImage($image){
         $uploadDir = 'uploads/';
-        $date = time();
+        $date =  date("YmdHis");
         $uploadFile = $uploadDir . basename($date."_".$_FILES['image']['name']);
     
         if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {

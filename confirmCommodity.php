@@ -3,22 +3,50 @@ session_start();
 require_once('Modules/registerCommodity.Class.php');
 
 print_r($_POST);
-
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $name = htmlspecialchars($_POST['name']);
     $price = htmlspecialchars($_POST['price']);
     $amount = htmlspecialchars($_POST['amount']);
     $tax = htmlspecialchars($_POST['tax']);
     $memo = htmlspecialchars($_POST['memo']);
-    //画像のディレクトリ
-    if(isset($_POST['image_dir'])){
-        $image_dir = htmlspecialchars($_POST['image_dir']);
+    //バリデーションにひっかかった時
+    if(isset($_POST['file_name'])){
+        $file_name = htmlspecialchars($_POST['file_name']);
     }
 
+    //1回目で画像が渡った時のタイムスタンプ
+    if(isset($_POST['uploadTime']) && $_POST['uploadTime']!==""){
+        $uploadTime = floor(htmlspecialchars($_POST['uploadTime']));
+        $date = date('YmdHis', $uploadTime);
+    }
+    //画像が再選択されたとき
     if(isset($_POST['image'])){
         $image = htmlspecialchars($_POST['image']);
     }
-    
+
+    //画像のディレクトリ
+    if(isset($_POST['image_dir']) && $_POST['image_dir']!==""){
+        if(isset($file_name) && $file_name==""){
+            //再選択されていないとき
+                $image_dir = htmlspecialchars($_POST['image_dir']);
+        }else{
+            //再選択されているとき
+            $image_dir = "https://marutani098723.com/new_app/uploads/".$date."_".$file_name;
+        }
+    }else{
+        //バリデーションパスして1回目で画像が渡った時
+        if(!empty($_FILES['image']['name'])){
+            if(isset($date) && $date!==""){
+                $image_dir = "https://marutani098723.com/new_app/uploads/".$date."_".$_FILES['image']['name'];
+            }
+        }else{
+            if(isset($date) && $date !=="" && isset($file_name)&& $file_name!==""){
+                //バリデーションで引っかかった時
+                $image_dir = "https://marutani098723.com/new_app/uploads/".$date."_".$file_name;
+            }
+        }
+    }
+    print_r($image_dir);
     $registerC = new registerCommodity();
 
     //合計金額
@@ -141,7 +169,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                             <div class="col">
                             </div>
                             <div class="col" style="white-space:nowrap;">
-                            <?php if(isset($image_dir)){ ?>
+                            <?php if(isset($image_dir)&& $image_dir!==""){ ?>
                                 <img src="<?=$image_dir?>" alt="画像"><br>
                             <?php } ?>
                                 

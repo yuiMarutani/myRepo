@@ -2,6 +2,7 @@
 session_start();
 require_once('Modules/registerCommodity.Class.php');
 
+print_r($_FILES);
 //セレクトボックス値作成（taxの作成）
 $arlist = array();
 for($i=5;$i<=20;$i++){
@@ -111,7 +112,7 @@ if(isset($_SESSION['memo'])){
 
 
 if(isset($_SESSION['back'])){
-    $again_msg = "お手数ですが、<br>もう一度画像をアップロードして下さい。";
+    $again_msg = "お手数ですが、もう一度画像をアップロードして下さい。";
 }
 
 //セッション切れリダイレクト
@@ -188,25 +189,25 @@ if(isset($_SESSION) && empty($_SESSION)){
                     <h5><?php echo $_SESSION['user_name'];?>様</h5>
                     <div class="container" style="padding:20px;">
                         <div class="row">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4">
+                            <div class="col"></div>
+                            <div class="col">
                                 <h3>商品候補登録</h3>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col">
                                 
                             </div>
                         </div>
                         <div class="row" style="padding:10px;">
-                            <div class="col-md-4">
+                            <div class="col">
                                 
                               
                             </div>
-                            <div class="col-md-4" style="white-space:nowrap;"> 
+                            <div class="col" style="white-space:nowrap;"> 
                             <!--javascriptで切り替え（検索フォーム）-->
-                                <div class="row g-3">
+                                <div class="container mt-5">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="formSwitch" onclick="toggleForms()">
-                                        <label class="form-check-label" for="formSwitch" style="display: block;">過去の履歴から検索</label>
+                                        <label class="form-check-label" for="formSwitch">過去の履歴から検索</label>
                                     </div>
                                     <form id="form1" action="search.php">
                                         <tr>
@@ -219,7 +220,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select id="sel1" name="name" class="form-select" size="10">
+                                                <select id="sel1" name="name" class="form-select" size="10" style="width:500px;">
                                                     <option value="1">1</option>
                                                 </select>
                                             </td>
@@ -254,7 +255,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             <?php unset($_SESSION['image_dir']);?>
                                             <?php unset($_SESSION['back']);?>
                                             <?php unset($_SESSION['image']);?>
-                                            <label for="name" style="display: block;">商品名</label>
+                                            <label for="name">商品名</label>
                                             <div style="color:red;">
                                                 <?php if(isset($error_1)){echo $error_1;}?>
                                             </div>
@@ -265,7 +266,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label for="price" style="display: block;">単価(１つ当たりの金額)</label>
+                                            <label for="price">単価(１つ当たりの金額)</label>
                                             <div style="color:red;">
                                                 <?php if(isset($error_2)){echo $error_2;}?>
                                             </div>
@@ -277,7 +278,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label for="amount" style="display: block;">個数</label>
+                                            <label for="amount">個数</label>
                                             <div style="color:red;">
                                                 <?php if(isset($error_3)){echo $error_3;}?>
                                             </div>
@@ -289,7 +290,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label for="tax" style="display: block;">税率</label>
+                                            <label for="tax">税率</label>
                                             <div class="mb-3">
                                                 <select class="form-select" name="tax">
                                                     <?php foreach($arlist as $rec){?>
@@ -305,7 +306,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label for="image" style="display: block;">画像アップロード</label>
+                                            <label for="image">画像アップロード</label>
                                             <div style="color:red;">
                                                 <?php if(isset($error_4)){echo $error_4;}?>
                                             </div>
@@ -330,7 +331,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                         <!--プレビュー終了-->
                                                         <label class="input-group-text" for="fileInput">ファイルの再選択</label>
                                                         <!--画像がキャンセルされた時-->
-                                                        <button type="submit" class="btn btn-outline-secondary btn-sm" id="cancel" name="cancel" >キャンセル</button>
+                                                        <button type="submit" class="btn btn-outline-secondary" id="cancel" name="cancel" >キャンセル</button>
                                                         <input type="text" class="form-control" id="fileName" name="file_name">
                                                     <?php }else{?>
                                                         <!--画像プレビュー-->
@@ -340,7 +341,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                                     <div class="input-group mb-3">
                                                                         <input type="file" name="image" class="form-control" id="fileInput">
                                                                         <!--画像がキャンセルされた時-->
-                                                                        <button class="btn btn-outline-secondary btn-sm" type="submit" id="cancel" name="cancel" onclick="cancel();">キャンセル</button>
+                                                                        <button class="btn btn-outline-secondary" type="submit" id="cancel" name="cancel" onclick="cancel();">キャンセル</button>
                                                                     </div>    
                                                                     <input type="hidden" name="uploadTime" id="uploadTime">
                                                                 </label>
@@ -352,14 +353,9 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 </div>
                                                 <!--画像プレビューjquery-->    
                                                 <script>
-                                                    $(function () {
+                                                     $(function () {
                                                         $(document).on("change", ".preview input[type=file]", function () {
                                                             let elem = this;
-                                                            if (elem.files.length === 0) {
-                                                                $(elem).closest(".preview").find(".preview-img").html('');
-                                                                $(elem).closest(".preview").find(".file__none").text('');
-                                                                return;
-                                                            }
                                                             let fileReader = new FileReader();
                                                             fileReader.readAsDataURL(elem.files[0]);
                                                             fileReader.onload = function () {
@@ -372,13 +368,6 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                         });
                                                     });
                                                 </script>
-                                                <!--イメージ画像の大きさを指定-->
-                                                <style>
-                                                    .preview-img img {
-                                                        max-width: 450px; /* 画像の最大幅を100pxに設定 */
-                                                        max-height: 450px; /* 画像の最大高さを100pxに設定 */
-                                                    }
-                                                </style>
                                                 <!--ファイルの再選択-->
                                                 <script>
                                                     
@@ -387,7 +376,6 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                         document.getElementById('fileName').value = fileName;
 
                                                         const file = event.target.files[0];
-                                                       
                                                         const formData = new FormData();
                                                         formData.append('file', file);
                                                         formData.append('fileName', fileName); // ファイル名を追加
@@ -433,8 +421,8 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     <tr>
                                         <td>
                                             <div class="mb-3">
-                                                <label for="memo" style="display: block;">メモ欄</label>
-                                                <textarea name="memo" class="form-control"><?php if(isset($memo)){ echo $memo; }?></textarea>
+                                                <label for="memo">メモ欄</label>
+                                                <textarea name="memo" size="20" class="form-control"><?php if(isset($memo)){ echo $memo; }?></textarea>
                                             </div>      
                                         </td>
                                     </tr>
@@ -447,14 +435,14 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </tr>
                                 </form>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col">
                                 
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col">
                                     
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col">
                             <!--登録されたものがここに表示されるので、ここから編集削除、購入確定は確定のみ-->
                             <!-- <ul class="list-group">
                                 <li class="list-group-item">
@@ -480,7 +468,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                 </li>
                             </ul> -->
                             </div>
-                            <div class="col-md-4"></div>
+                            <div class="col"></div>
                         </div>
                     </div>
                 </div>

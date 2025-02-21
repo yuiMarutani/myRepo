@@ -15,11 +15,8 @@ class Authentification{
         $sth = $this->pdo->prepare("SELECT * FROM users where USERS_ID=?");
         $sth->execute(array($USERS_ID));
         $result = $sth->fetch(PDO::FETCH_ASSOC);
-        if($result==NULL){
-            $dbpassword = "";
-        }else{
-            $dbpassword = $result['password'];
-        }
+        $dbpassword = $result['password'];
+
         //ログイン失敗メッセージの初期化
         $msg = '';
 
