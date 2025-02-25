@@ -131,4 +131,25 @@ class registerCommodity extends Settings{
         }
         return $uploadFile;
     }
+
+    function confirm($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name){
+        //最初はcommodityの登録
+        $insert_sql_1 = "INSERT INTO commodities(user_id,name,shoppingnum) VALUES(?,?,?)";
+        $stmt = $this->pdo->prepare($insert_sql_1);
+        $result = $stmt->execute(array($user_id,$name,$shoppingnum));
+        $result = $stmt->fetchColumn();
+
+        //登録したcommodity_IDを取得
+        $query = "SELECT commodity_ID from commodities WHERE user_id=? AND name=? AND shoppingnum=?";
+        $stmt = $this->pdo->prepare($query);
+        $result2 = $stmt->execute(array($user_id,$name,$shoppingnum));
+        $result2 = $stmt->fetchColumn();
+
+        //commodity_IDを使ってorders表に挿入
+        $insert_sql_2 = "INSERT INTO orders(commodity_ID,user_id,tax,amount,price,total,image,purchased,shoppingnum,memo,del_flg) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        $stmt = $this->pdo->prepare($insert_sql_2);
+        $result3 = $stmt->execute(array($result2,$user_id,$tax,$amount,$price,$total,$image_dir,0,$shoppingnum,$memo,0));
+        $result3 = $stmt->fetchColumn();
+        
+    }
 }
