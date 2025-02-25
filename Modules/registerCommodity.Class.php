@@ -132,17 +132,45 @@ class registerCommodity extends Settings{
         return $uploadFile;
     }
 
+    //データがデータベースに存在するかどうか。
+    function verify_insert($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name){
+        //まずcommodities表からnameとshoppingnumとuser_idが同じデータがあるか調べる
+        $query = "SELECT commodity_ID FROM commodities WHERE user_id=? AND name=? AND shoppingnum=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($user_id,$name,$shoppingnum));
+        //commodity_IDの取得
+        $commodity_ID = $stmt->fetchColumn();
+
+        //ordersのところにcommodity_IDの情報があるかないか
+        $query2 = "SELECT count(*) FROM orders WHERE commodity_ID=? AND user_id=? AND tax=? AND amount=? AND price=? AND total=? AND image=? AND purchased=? AND shoppingnum=? AND memo=?";
+        $stmt = $this->pdo->prepare($query2);
+        $result = $stmt->execute(array($commodity_ID,$user_id,$tax,$amount,$price,$total,$image_dir,0,$shoppingnum,$memo));
+        $count_data = $stmt->fetchColumn();
+
+        return $count_data;
+    }
+
     function confirm($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name){
         //最初はcommodityの登録
-        $insert_sql_1 = "INSERT INTO commodities(user_id,name,shoppingnum) VALUES(?,?,?)";
-        $stmt = $this->pdo->prepare($insert_sql_1);
-        $result = $stmt->execute(array($user_id,$name,$shoppingnum));
+        //商品名が登録されていたら挿入しない、されていなかったら挿入する
+        $query = "SELECT count(*) FROM commodities WHERE name = ? AND user_id=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($name,$user_id));
         $result = $stmt->fetchColumn();
 
+        //データが0なら挿入、他挿入しない
+        if($result ==0){
+            //commodities表挿入
+            $insert_sql_1 = "INSERT INTO commodities(user_id,name,shoppingnum) VALUES(?,?,?)";
+            $stmt = $this->pdo->prepare($insert_sql_1);
+            $result = $stmt->execute(array($user_id,$name,$shoppingnum));
+            $result = $stmt->fetchColumn();
+        }
+        
         //登録したcommodity_IDを取得
-        $query = "SELECT commodity_ID from commodities WHERE user_id=? AND name=? AND shoppingnum=?";
+        $query = "SELECT commodity_ID from commodities WHERE user_id=? AND name=?";
         $stmt = $this->pdo->prepare($query);
-        $result2 = $stmt->execute(array($user_id,$name,$shoppingnum));
+        $result2 = $stmt->execute(array($user_id,$name));
         $result2 = $stmt->fetchColumn();
 
         //commodity_IDを使ってorders表に挿入
@@ -151,5 +179,58 @@ class registerCommodity extends Settings{
         $result3 = $stmt->execute(array($result2,$user_id,$tax,$amount,$price,$total,$image_dir,0,$shoppingnum,$memo,0));
         $result3 = $stmt->fetchColumn();
         
+    }
+
+    function kensaku($name2,$user_id){
+        $name2 = $name2."%";
+        $query = "SELECT name,commodity_ID from commodities WHERE name LIKE ? AND user_id=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($name2,$user_id));
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $row;
+    }
+
+    //検索データの選択した後の取得
+    function kensakuData($kensaku,$user_id){
+        $query = "SELECT * FROM orders WHERE user_id=? AND commodity_ID=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($user_id,$kensaku));
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    //検索した商品名の取得
+    function kensakuName($kensaku,$user_id){
+        $query = "SELECT name FROM commodities WHERE user_id=? AND commodity_ID=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($user_id,$kensaku));
+        $name = $stmt->fetchColumn();
+        
+        return $name;
+    }
+
+    function getCommodities($user_id,$shoppingnum){
+        $query = "SELECT * from orders WHERE user_id = ? AND shoppingnum = ? AND purchased = ? ";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($user_id,$shoppingnum,0));
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
+    //Commodity_IDの配列から商品名を取得
+    function commodityName($dlist,$user_id,$shoppingnum){
+        $ar = array();//送信用配列
+        foreach($dlist as $mec){
+            $query ="SELECT name FROM commodities WHERE user_id=? AND commodity_ID =? AND shoppingnum=?";
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute(array($user_id,$mec,$shoppingnum));
+            $result = $stmt->fetchColumn();
+            array_push($ar,$result);
+        }
+
+        return $ar;
     }
 }

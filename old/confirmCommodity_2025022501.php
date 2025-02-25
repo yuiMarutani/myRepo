@@ -90,6 +90,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
         //確定処理
 
+
+
         //画像がなかった時のimage_dir
 
         if(!isset($image_dir) || empty($image_dir)){
@@ -97,17 +99,16 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             $image_dir = "";
 
         }
-        //2重登録防止
-        $verify_insert = $registerC->verify_insert($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name);
-        if($verify_insert==0){
-            //データがないときは登録、他登録せずリダイレクト
-            $confirm_method = $registerC->confirm($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name);
-            //商品を登録メッセージ
-            $_SESSION['message'] = "商品を登録しました。";
-        }
+
+
+
+        $confirm_method = $registerC->confirm($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name);
 
         //headerで最初の画面に戻る
+
         header('location:registerCommodity.php');
+
+        
 
     }
 
@@ -234,14 +235,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $tax = $_SESSION['tax'];
 
         if(isset($image_dir)){
+
             $_SESSION['image_dir'] = $image_dir;
+
         }
+
 
 
         $memo = $_SESSION['memo'];
-        if(isset($image_dir) && $image_dir<>""){
-            $_SESSION['back'] = 1; //戻るボタンのフラグ
-        }
+
+        $_SESSION['back'] = 1; //戻るボタンのフラグ
+
         header('location:registerCommodity.php');
 
         exit();
@@ -400,11 +404,11 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                             </div>
 
-                            <div class="col-md-4" style="white-space:nowrap;display:flex;justify-content:center;">
+                            <div class="col-md-4" style="white-space:nowrap;text-align:center;">
 
                                 <?php if(isset($image_dir)&& $image_dir!==""){ ?>
 
-                                    <img src="<?=$image_dir?>" alt="画像" style="width:auto;"><br>
+                                    <img src="<?=$image_dir?>" alt="画像" style="width:90%;height:90%;"><br>
 
                                 <?php } ?>
 
@@ -422,7 +426,7 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                             </div>
 
-                            <div class="col-md-4" style="white-space:nowrap;display:flex;justify-content:center;">
+                            <div class="col-md-4" style="white-space:nowrap;justify-content:center;">
 
                                     <table class="table table-sm table-bordered">
 
@@ -476,7 +480,7 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                                             <td>memo</td>
 
-                                            <td style ="whitespace:nowrap;"><?=$memo?></td>
+                                            <td style ="whitespace:nowrpa;"><?=$memo?></td>
 
                                         </tr>
 

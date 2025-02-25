@@ -41,8 +41,12 @@ if($dataVerify>0){
     //データの登録あるとき
 
     $tax = $registerC->getTaxData($user_id,$shoppingnum);
+
 }
 
+
+
+//$_POSTで渡ってきている時
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
@@ -193,17 +197,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     
 
 }
-//商品登録一覧を表示する
-$commodities = $registerC->getCommodities($user_id,$shoppingnum);
-$dlist = array();
-foreach($commodities as $k=>$v){
-    $CID = $v['commodity_ID'];
-    array_push($dlist,$CID);
-}
-$CName = $registerC->commodityName($dlist,$user_id,$shoppingnum);
-print_r($CName);
-//$_POSTで渡ってきている時
-
 
 
 //戻るボタンで返ってきたとき
@@ -253,6 +246,7 @@ if(isset($_SESSION['memo'])){
 //商品を登録しました。メッセージ
 if(isset($_SESSION['message'])){
     $message = $_SESSION['message'];
+    /* unset($_SESSION['message']); */
 }
 
 
@@ -955,36 +949,66 @@ if(isset($_SESSION) && empty($_SESSION)){
                             </div>
 
                             <div class="row">
-                                <div class="col-4"></div>
-                                <div class="col-4">
-                                    <?php if($CName ==''){?>
-                                        <span>データがありません。</span>
-                                    <?php }else{ ?>
-                                         <!--登録されたものがここに表示されるので、ここから編集削除、購入確定は確定のみ-->
-                                         <table class="table table-bordered" style="display:flex;justify-content:center;">
-                                             <tr>
-                                                 <th style="background-color:pink;text-align:center;">商品名</th>
-                                                 <th style="background-color:pink;text-align:center;">編集</th>
-                                                 <th style="background-color:pink;text-align:center;">削除</th>
-                                             </tr>
-                                       
-                                             <?php foreach($CName as $value){?>
-                                             <tr>
-                                                 <td style="text-align:center;"><?=$value ?></td>
-                                                 <td style="text-align:center;">
-                                                     <button type="button" class="btn btn-success" onclick="location.href='registerCommodity.php'">編集</button>
-                                                 </td>
-                                                 <td style="text-align:center;">
-                                                     <button type="button" class="btn btn-dark" onclick="location.href='registerCommodity.php'">削除</button>
-                                                 </td>
-                                             </tr>
-                                             <?php } ?>
-                                         </table>
-                                    <?php } ?>
-                                   
-                                <!--商品リスト終了-->
-                                <div class="col-4"></div>
+
+                                <div class="col-md-4">
+
+                                    
+
+                                </div>
+
+                                <div class="col-md-4">
+
+                            <!--登録されたものがここに表示されるので、ここから編集削除、購入確定は確定のみ-->
+
+                            <!-- <ul class="list-group">
+
+                                <li class="list-group-item">
+
+                                    <div style="display:flex;justify-content:center;">
+
+                                        リンゴ&nbsp;&nbsp;
+
+                                        <button type="button" class="btn btn-success" onclick="location.href='registerCommodity.php'">編集</button>
+
+                                        <button type="button" class="btn btn-dark" onclick="location.href='registerCommodity.php'">削除</button>
+
+                                    </div>    
+
+                                </li>
+
+                                <li class="list-group-item">
+
+                                    <div style="display:flex;justify-content:center;">
+
+                                        みかん&nbsp;&nbsp;
+
+                                        <button type="button" class="btn btn-success" onclick="location.href='registerCommodity.php'">編集</button>
+
+                                        <button type="button" class="btn btn-dark" onclick="location.href='registerCommodity.php'">削除</button>
+
+                                    </div>    
+
+                                </li>
+
+                                <li class="list-group-item">
+
+                                    <div style="display:flex;justify-content:center;">
+
+                                        ブドウ&nbsp;&nbsp;
+
+                                        <button type="button" class="btn btn-success" onclick="location.href='registerCommodity.php'">編集</button>
+
+                                        <button type="button" class="btn btn-dark" onclick="location.href='registerCommodity.php'">削除</button>
+
+                                    </div>    
+
+                                </li>
+
+                            </ul> -->
+
                             </div>
+
+                            <div class="col-md-4"></div>
 
                         </div>
 

@@ -128,7 +128,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     ここで設定した消費税は一括で登録されますが、「商品登録」より個別で商品の消費税を変更することが可能です。
                                     目標金額は、決まった金額に収めたい時に設定します。使用しない場合は0を入力して下さい。
                                     <div>
-                                        <img src="image/settings.png" style="width:100%;">
+                                        <img src="image/settings.png" style="width:80%;height:80%">
                                     </div>
                                 </li>
                                 <li>
@@ -136,7 +136,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     商品登録後、一覧画面下に追加された商品の情報が出ます。
                                     こちらで購入前の商品情報の編集削除ができます。
                                     <div>
-                                        <img src="image/registerCommodity.png" style="width:100%;">
+                                        <img src="image/registerCommodity.png" style="width:80%;height:80%">
                                     </div>
                                 </li>
                                 <li>
@@ -145,13 +145,13 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     右下の残高等の情報を確認しよければ確認ボタンを押します。
                                     「購入確定」の購入確認ボタン押下後「確定ボタン」を押し商品の購入を確定します。
                                     <div>
-                                        <img src="image/confirm.png" style="width:100%;">
+                                        <img src="image/confirm.png" style="width:80%;height:80%;">
                                     </div>
                                 </li>
                                 <li>
                                     4.「購入履歴」からお買い物履歴を確認できます。セレクトボックスで年と月を絞り込むと便利です。
                                     <div>
-                                        <img src="image/history.png" style="width:100%;">
+                                        <img src="image/history.png" style="width:80%;height:80%;">
                                     </div>
                                 </li>
                             </ul>

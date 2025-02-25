@@ -102,8 +102,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         if($verify_insert==0){
             //データがないときは登録、他登録せずリダイレクト
             $confirm_method = $registerC->confirm($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name);
-            //商品を登録メッセージ
-            $_SESSION['message'] = "商品を登録しました。";
         }
 
         //headerで最初の画面に戻る
@@ -234,14 +232,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $tax = $_SESSION['tax'];
 
         if(isset($image_dir)){
+
             $_SESSION['image_dir'] = $image_dir;
+
         }
+
 
 
         $memo = $_SESSION['memo'];
-        if(isset($image_dir) && $image_dir<>""){
-            $_SESSION['back'] = 1; //戻るボタンのフラグ
-        }
+
+        $_SESSION['back'] = 1; //戻るボタンのフラグ
+
         header('location:registerCommodity.php');
 
         exit();
