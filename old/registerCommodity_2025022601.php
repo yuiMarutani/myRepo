@@ -1,9 +1,12 @@
 <?php 
 
 session_start();
+
 require_once('Modules/registerCommodity.Class.php');
 
+print_r($_POST);
 //セレクトボックス値作成（taxの作成）
+
 $arlist = array();
 
 for($i=5;$i<=20;$i++){
@@ -44,46 +47,15 @@ if($dataVerify>0){
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-    //商品登録後編集ボタンが押された時
-    if(isset($_POST['edit'])){
-        $edit = htmlspecialchars($_POST['edit']);
-    }
+    $name = htmlspecialchars($_POST['name']);
 
-    if(isset($_POST['cid'])){
-        $cid = htmlspecialchars($_POST['cid']);
-    }
+    $price = htmlspecialchars($_POST['price']);
 
-    if(isset($_POST['order_id'])){
-        $order_id = htmlspecialchars($_POST['order_id']);
-    }
+    $amount = htmlspecialchars($_POST['amount']);
 
-    //更新した時
-    if(isset($_POST['update'])){
-        $update = htmlspecialchars($_POST['update']);
-    }
+    $tax = htmlspecialchars($_POST['tax']);
 
-    if(isset($_POST['name'])){
-        $name = htmlspecialchars($_POST['name']);
-    }
-
-    if(isset($_POST['price'])){
-        $price = htmlspecialchars($_POST['price']);
-    }
-
-    if(isset($_POST['amount'])){
-        $amount = htmlspecialchars($_POST['amount']);
-    }
-
-    if(isset($_POST['tax'])){
-        $tax = htmlspecialchars($_POST['tax']);
-    }
-
-    if(isset($_POST['delete'])){
-        $delete = htmlspecialchars($_POST['delete']);
-    }
-    if(isset($_POST['memo'])){
-        $memo = htmlspecialchars($_POST['memo']);
-    }
+    $memo = htmlspecialchars($_POST['memo']);
 
     if(isset($_POST['uploadTime'])){
         $uploadTime = htmlspecialchars($_POST['uploadTime']);
@@ -92,11 +64,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     if(isset($_POST['image'])){
         $image = htmlspecialchars($_POST['image']);
     }else{
-        if(isset($edit)||isset($delete)){
-            $image = ""; //画像はimage_dirに入っている
-        }else{
-            $image = $_FILES['image']['name'];
-        }
+        $image = $_FILES['image']['name'];
     }
 
     //検索ボタンが押された時
@@ -185,10 +153,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     
 
     //エラーバリデーション
-    //編集の時は使用しない
-    if(!isset($edit)){
-        list($error_1,$error_2,$error_3) = $registerC->validateCommodity($name,$price,$amount);
-    }
+
+    list($error_1,$error_2,$error_3) = $registerC->validateCommodity($name,$price,$amount);
 
     //画像バリデーション
 
@@ -218,52 +184,21 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
     }
 
-    //商品編集ボタンが押された時の処理
-    if(isset($edit)){
-        $error_1="";
-        $error_2="";
-        $error_3="";
-        //orderの特定
-        
-        $get_edit = $registerC->edit($cid,$order_id,$user_id,$shoppingnum);
-        $tax = $get_edit['tax'];
-        $amount = $get_edit['amount'];
-        $price = $get_edit['price'];
-        $total = $get_edit['total'];
-        $image_dir = $get_edit['image'];
-        $memo = $get_edit['memo'];
-    }
     
-    //ボタンが押された時の処理
-    if(isset($update)){
-        if(!empty($_FILES['image']['name'])){
-            $uploadTime = date('YmdHis', $uploadTime);
-            $image_dir = "https://marutani098723.com/new_app/uploads/".$uploadTime. "_".$_FILES['image']['name'];
-        }else{
-            $image_dir = $image_dir;
-        }
-
-        $update = $registerC->updateCommodities($name,$price,$amount,$tax,$memo,$image_dir,$order_id,$cid,$shoppingnum,$user_id);
-        $message_2 = "更新しました。";
-        $_SESSION['message_2'] = $message_2;
-        header('location:registerCommodity.php');
-        exit();
-    }
 
 }
 //商品登録一覧を表示する
 $commodities = $registerC->getCommodities($user_id,$shoppingnum);
 $dlist = array();
-
 foreach($commodities as $k=>$v){
     $CID = $v['commodity_ID'];
-    $order_id = $v['order_id'];
     $CName = $registerC->commodityName($CID,$user_id,$shoppingnum);
     $value['cid'] = $CID;
     $value['cname'] = $CName;
-    $value['order_id'] = $order_id;
     array_push($dlist,$value);
 }
+
+
 //戻るボタンで返ってきたとき
 
 if(isset($_SESSION['name'])){
@@ -318,20 +253,7 @@ if(isset($_SESSION['back'])){
     $again_msg = "お手数ですが、<br>もう一度画像をアップロードして下さい。";
 }
 
-//削除が押された時の処理
-if(isset($delete)){
-    $price = "";
-    //ordersテーブルをdel_flg=1にする
-    $order_id = htmlspecialchars($_POST['order_id']);
-    $delete_db = $registerC->deleteData($order_id);
-    $name = ""; //nameが入力されてしまうため、空にする
-    $error_1 = "";
-    $error_2 = "";
-    $error_3 = "";
-    $error_4 = "";
-    header('location:registerCommodity.php');
-    exit();
-}
+
 
 //セッション切れリダイレクト
 
@@ -374,7 +296,7 @@ if(isset($_SESSION) && empty($_SESSION)){
 <body>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <header></header>
 
     <main>
@@ -497,82 +419,86 @@ if(isset($_SESSION) && empty($_SESSION)){
                             <!--javascriptで切り替え（検索フォーム）-->
 
                                 <div class="row g-3">
-                                    <!--商品編集ボタンが押された時以外-->
-                                    <?php if(!isset($edit)){?>
-                                        <div class="form-check form-switch">
-                                            <?php if(isset($search) || isset($kensaku)){?>
-                                                <input class="form-check-input" type="checkbox" checked id="formSwitch" onclick="toggleForms()">
-                                            <?php }else{?>
-                                                <input class="form-check-input" type="checkbox" id="formSwitch" onclick="toggleForms()">
-                                            <?php }?>
-                                            <label class="form-check-label" for="formSwitch" style="display: block;">過去の履歴から検索</label>
-                                        </div>
 
-                                        <!--検索フォーム-->
-                                        <form id="form1" action="" method="post">
-                                            <tr>
-                                                <td>
-                                                    <div class="input-group" id="searchinput" style="display:flex;justify-content:center;">
-                                                        <input type="text" name="name2" class="form-control" placeholder="商品名の入力" aria-label="" aria-describedby="button-addon2" value="<?php if(isset($name2)){echo $name2;}?>">
-                                                        <?php if(isset($name)){?>
-                                                            <input type="hidden" name="name" value="<?=$name?>">
-                                                        <?php }else{?>
-                                                            <input type="hidden" name="name" value="">
-                                                        <?php }?>
-                                                        <?php if(isset($price)){?>
-                                                            <input type="hidden" name="price" value="<?=$price?>">
-                                                        <?php }else{?>
-                                                            <input type="hidden" name="price" value="">
-                                                        <?php }?>
-                                                        <?php if(isset($amount)){?>
-                                                            <input type="hidden" name="amount" value="<?=$amount?>">
-                                                        <?php }else{?>
-                                                            <input type="hidden" name="amount" value="">
-                                                        <?php }?>
-                                                        <?php if(isset($tax)){?>
-                                                            <input type="hidden" name="tax" value="<?=$tax?>">
-                                                        <?php }else{?>
-                                                            <input type="hidden" name="tax" value="">
-                                                        <?php }?>
-                                                        <?php if(isset($image)){?>
-                                                            <input type="hidden" name="image" value="<?=$image?>">
-                                                        <?php }else{?>
-                                                            <input type="hidden" name="image" value="">
-                                                        <?php }?>
-                                                        <?php if(isset($memo)){?>
-                                                            <input type="hidden" name="memo" value="<?=$memo?>">
-                                                        <?php }else{?>
-                                                            <input type="hidden" name="memo" value="">
-                                                        <?php }?>
-                                                        <?php if(isset($image_dir)){?>
-                                                            <input type="hidden" name="image_dir" value="<?=$image_dir?>">
-                                                        <?php }else{ ?>
-                                                            <input type="hidden" name="image_dir" value="">
-                                                        <?php } ?>
-                                                        <?php if(isset($uploadTime)){?>
-                                                            <input type="hidden" name="uploadTIme" value="<?=$uploadTime ?>">
-                                                        <?php }else{ ?>
-                                                            <input type="hidden" name="uploadTime" value="">
-                                                        <?php } ?>
-                                                        <button class="btn btn-outline-secondary" type="submit" name="search">検索</button>
-                                                    </div>    
-                                                </td>
-                                            </tr>
+                                    <div class="form-check form-switch">
+                                        <?php if(isset($search) || isset($kensaku)){?>
+                                            <input class="form-check-input" type="checkbox" checked id="formSwitch" onclick="toggleForms()">
+                                        <?php }else{?>
+                                            <input class="form-check-input" type="checkbox" id="formSwitch" onclick="toggleForms()">
+                                        <?php }?>
+                                        <label class="form-check-label" for="formSwitch" style="display: block;">過去の履歴から検索</label>
+                                    </div>
 
-                                            <tr>
-
-                                                <td>
-                                                    <select id="sel1" name="kensaku" class="form-select" size="10" onchange="submit(this.form)">
-                                                    <?php foreach($kensaku as $k=>$rec){?>
-                                                        <option value="<?=$rec['commodity_ID']?>"><?=$rec['name'] ?></option>
+                                    <!--検索フォーム-->
+                                    <form id="form1" action="" method="post">
+                                        <tr>
+                                            <td>
+                                                <div class="input-group" id="searchinput" style="display:flex;justify-content:center;">
+                                                    <input type="text" name="name2" class="form-control" placeholder="商品名の入力" aria-label="" aria-describedby="button-addon2" value="<?php if(isset($name2)){echo $name2;}?>">
+                                                    <?php if(isset($name)){?>
+                                                        <input type="hidden" name="name" value="<?=$name?>">
+                                                    <?php }else{?>
+                                                        <input type="hidden" name="name" value="">
+                                                    <?php }?>
+                                                    <?php if(isset($price)){?>
+                                                        <input type="hidden" name="price" value="<?=$price?>">
+                                                    <?php }else{?>
+                                                        <input type="hidden" name="price" value="">
+                                                    <?php }?>
+                                                    <?php if(isset($amount)){?>
+                                                        <input type="hidden" name="amount" value="<?=$amount?>">
+                                                    <?php }else{?>
+                                                        <input type="hidden" name="amount" value="">
+                                                    <?php }?>
+                                                    <?php if(isset($tax)){?>
+                                                        <input type="hidden" name="tax" value="<?=$tax?>">
+                                                    <?php }else{?>
+                                                        <input type="hidden" name="tax" value="">
+                                                    <?php }?>
+                                                    <?php if(isset($image)){?>
+                                                        <input type="hidden" name="image" value="<?=$image?>">
+                                                    <?php }else{?>
+                                                        <input type="hidden" name="image" value="">
+                                                    <?php }?>
+                                                    <?php if(isset($memo)){?>
+                                                        <input type="hidden" name="memo" value="<?=$memo?>">
+                                                    <?php }else{?>
+                                                        <input type="hidden" name="memo" value="">
+                                                    <?php }?>
+                                                    <?php if(isset($image_dir)){?>
+                                                        <input type="hidden" name="image_dir" value="<?=$image_dir?>">
+                                                    <?php }else{ ?>
+                                                        <input type="hidden" name="image_dir" value="">
                                                     <?php } ?>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </form>
-                                        <!--検索フォーム-->
-                                    <?php }?>
+                                                    <?php if(isset($uploadTime)){?>
+                                                        <input type="hidden" name="uploadTIme" value="<?=$uploadTime ?>">
+                                                    <?php }else{ ?>
+                                                        <input type="hidden" name="uploadTime" value="">
+                                                    <?php } ?>
+                                                    <button class="btn btn-outline-secondary" type="submit" name="search">検索</button>
+                                                </div>    
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>
+                                                <select id="sel1" name="kensaku" class="form-select" size="10" onchange="submit(this.form)">
+                                                <?php foreach($kensaku as $k=>$rec){?>
+                                                    <option value="<?=$rec['commodity_ID']?>"><?=$rec['name'] ?></option>
+                                                <?php } ?>
+                                                </select>
+
+                                            </td>
+
+                                        </tr>
+
+                                    </form>
+
+                                    <!--検索フォーム-->
+
                                 </div>
+
                                 <script>
 
                                     window.onload=function(){
@@ -746,7 +672,7 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                                                 <?php if(isset($image_dir) && $image_dir!==""){?>
 
-                                                    <img id="image" src="<?=$image_dir?>" alt="画像イメージ" style="width:100%;">
+                                                    <img id="image" src="<?=$image_dir?>" alt="画像イメージ">
 
                                                 <?php }?>
 
@@ -1002,20 +928,9 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         <td>
 
                                             <div class="mb-3" style="text-align:center;padding:10px;">
-                                                <?php if(isset($edit)){ ?>
-                                                    <div style="display:flex;justify-content:center;">
-                                                        <form action="" method="post">
-                                                            <button type="button" name="return" class="btn btn-warning" id="return" onclick="location.href='registerCommodity.php'">戻る</button>
-                                                            &nbsp;&nbsp;
-                                                            <input type="hidden" name="cid" value="<?=$cid?>">
-                                                            <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($_POST['order_id']); ?>">
-                                                            <button type="submit" name="update" class="btn btn-warning" id="btn_confirm">更新</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                <?php }else{?>
-                                                    <button type="submit" name="submitC" class="btn btn-warning" onclick="location.href='confirmCommodity.php'" id="btn">確認</button>
-                                                <?php }?>
+
+                                                <button type="submit" name="submitC" class="btn btn-warning" onclick="location.href='confirmCommodity.php'" id="btn">確認</button>
+
                                             </div>
 
                                         </td>
@@ -1031,20 +946,13 @@ if(isset($_SESSION) && empty($_SESSION)){
                                 
 
                             </div>
+
                             <div class="row">
                                 <div class="col-4"></div>
                                 <div class="col-4">
-                                <!--商品編集の時は表示させない-->
-                                <?php if(!isset($edit)){?>
                                     <?php if($CName ==''){?>
                                         <span>データがありません。</span>
                                     <?php }else{ ?>
-                                        <?php if(isset($_SESSION['message_2'])){ ?>
-                                            <div class="alert alert-success" role="alert">
-                                                <?php echo $_SESSION['message_2']; ?>
-                                                <?php unset($_SESSION['message_2']); ?>
-                                            </div>
-                                        <?php } ?>
                                          <!--登録されたものがここに表示されるので、ここから編集削除、購入確定は確定のみ-->
                                         <table class="table table-bordered" style="display:flex;justify-content:center;">
                                             <tr>
@@ -1056,36 +964,21 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             <tr>
                                                 <td style="text-align:center;"><?=$rec['cname'] ?></td>
                                                 <td style="text-align:center;">
-                                                <!--編集ボタン-->
                                                     <form action="" method="post">
                                                         <input type="hidden" name="cid" value="<?=$rec['cid']?>">
-                                                        <input type="hidden" name="name" value="<?=$rec['cname']?>">
-                                                        <input type="hidden" name="order_id" value="<?=$rec['order_id'] ?>">
                                                         <button type="submit" class="btn btn-success" name="edit">編集</button>
                                                     </form>
                                                 </td>
-                                                <td>
-                                                    <!--削除ボタン-->
-                                                    <form action="" method="post" onsubmit="return confirmDelete()">
+                                                <td style="text-align:center;">
+                                                    <form action="" method="post">
                                                         <input type="hidden" name="cid" value="<?=$rec['cid']?>">
-                                                        <input type="hidden" name="name" value="<?=$rec['cname']?>">
-                                                        <input type="hidden" name="order_id" value="<?=$rec['order_id'] ?>">
-                                                        <input type="hidden" name="price" value="">
-                                                        <input type="hidden" name="amount" value="">
-                                                        <button type="submit" class="btn btn-dark" name="delete">削除</button>
+                                                        <button type="button" class="btn btn-dark" name="delete" onclick="location.href='registerCommodity.php'">削除</button>
                                                     </form>
-                                                    <script>
-                                                        function confirmDelete() {
-                                                            return confirm('本当に削除しますか？');
-                                                        }
-                                                    </script>
                                                 </td>
                                             </tr>
                                             <?php } ?>
                                         </table>
                                     <?php } ?>
-                                <?php } ?>
-                                    
                                    
                                 <!--商品リスト終了-->
                                 <div class="col-4"></div>

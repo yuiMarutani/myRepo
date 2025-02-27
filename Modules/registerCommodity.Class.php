@@ -212,25 +212,55 @@ class registerCommodity extends Settings{
     }
 
     function getCommodities($user_id,$shoppingnum){
-        $query = "SELECT * from orders WHERE user_id = ? AND shoppingnum = ? AND purchased = ? ";
+        $query = "SELECT * from orders WHERE user_id = ? AND shoppingnum = ? AND purchased = ? AND del_flg<>?";
         $stmt = $this->pdo->prepare($query);
-        $result = $stmt->execute(array($user_id,$shoppingnum,0));
+        $result = $stmt->execute(array($user_id,$shoppingnum,0,1));
         $result = $stmt->fetchAll();
 
         return $result;
     }
 
     //Commodity_IDの配列から商品名を取得
-    function commodityName($dlist,$user_id,$shoppingnum){
-        $ar = array();//送信用配列
-        foreach($dlist as $mec){
-            $query ="SELECT name FROM commodities WHERE user_id=? AND commodity_ID =? AND shoppingnum=?";
-            $stmt = $this->pdo->prepare($query);
-            $result = $stmt->execute(array($user_id,$mec,$shoppingnum));
-            $result = $stmt->fetchColumn();
-            array_push($ar,$result);
-        }
+    function commodityName($CID,$user_id,$shoppingnum){
+        $query ="SELECT name FROM commodities WHERE user_id=? AND commodity_ID =? AND shoppingnum=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($user_id,$CID,$shoppingnum));
+        $result = $stmt->fetchColumn();
 
-        return $ar;
+        return $result;
+    }
+
+    //商品を編集するのでオーダーの特定
+    function edit($cid,$order_id,$user_id,$shoppingnum){
+        $query = "SELECT * FROM orders WHERE order_id=? AND commodity_ID=? AND user_id=? AND shoppingnum=?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($order_id,$cid,$user_id,$shoppingnum));
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    //商品登録後の更新処理
+    function updateCommodities($name,$price,$amount,$tax,$memo,$image_dir,$order_id,$cid,$shoppingnum,$user_id){
+        //orders表の変更
+        $total = floor($price*$amount*(1+$tax*1/100));
+        $update_sql = "UPDATE orders SET tax=?,amount=?,price=?,total=?,image=?,memo=? WHERE order_id=? ";
+        $stmt = $this->pdo->prepare($update_sql);
+        if($image_dir==NULL){
+            $image_dir="";
+        }
+        $result = $stmt->execute(array($tax,$amount,$price,$total,$image_dir,$memo,$order_id));
+        $result = $stmt->fetchColumn();
+        //commodities表の変更
+
+        return $result;
+    }
+
+    function deleteData($order_id){
+        $del_query = "UPDATE orders SET del_flg = ? WHERE order_id = ?";
+        $stmt = $this->pdo->prepare($del_query);
+        $result = $stmt->execute(array(1,$order_id));
+
+        return $result;
     }
 }
