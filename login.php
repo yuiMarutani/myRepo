@@ -3,6 +3,7 @@ set_include_path('/home/r5736346/public_html/marutani098723.com/new_app/');
 require_once('Modules/User.Class.php');
 require_once('Modules/Authentification.Class.php');
 
+
 //ログインの認証
 if($_SERVER['REQUEST_METHOD']==='POST'){
     $user_data = new User(null,$_POST['USERS_ID'],null,$_POST['password'],null);
@@ -86,8 +87,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     <div class="col">
                         
                     </div>
-                    <div class="col"  style="text-align:left;">
-                        <a href="register.php">新規登録</a>
+                    <div class="col" style="text-align:left;">
+                        <a href="register.php" >新規登録</a>
                     </div>
                     <div class="col">
                             
@@ -96,14 +97,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             </div>
             <div class="container text-center">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-4">
                         
                     </div>
-                    <div class="col"  style="text-align:left;">
+                    <div class="col-8"  style="text-align:left;">
                         <a href="forgotPassword.php">パスワードをお忘れの場合</a>
-                    </div>
-                    <div class="col">
-                            
                     </div>
                 </div>
             </div>

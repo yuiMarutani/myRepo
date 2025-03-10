@@ -11,33 +11,40 @@ class Authentification{
     }
     
     //認証
-    public function authentification($USERS_ID,$password){
-        $sth = $this->pdo->prepare("SELECT * FROM users where USERS_ID=?");
+    public function authentification($USERS_ID, $password) {
+        
+        // SQLクエリの準備と実行
+        $sth = $this->pdo->prepare("SELECT * FROM users WHERE USERS_ID = ?");
         $sth->execute(array($USERS_ID));
         $result = $sth->fetch(PDO::FETCH_ASSOC);
-        if($result==NULL){
-            $dbpassword = "";
-        }else{
-            $dbpassword = $result['password'];
-        }
-        //ログイン失敗メッセージの初期化
+    
+        // パスワードのトリム
+        $password = trim($password);
+    
+        // パスワードの取得
+        $dbpassword = $result ? $result['password'] : '';
+    
+        // ログイン失敗メッセージの初期化
         $msg = '';
-
-        //パスワードを認証
-        if (password_verify($password, $dbpassword)) { 
-            $msg ='';
-            //login成功時はwrapper.phpへ行き、セッションを作る
-            $_SESSION['user_name'] = $result['user_name'];
-            $_SESSION['password'] = $dbpassword;
-            header("location:wrapper.php");
-        }else { 
-            $msg = 'ログインに失敗しました。';
-        }
-        $stmt = null;
-        $this->pdo = null;
         
-        return $msg;
-    } 
+            // パスワードを認証
+            if ($result && password_verify($password, $dbpassword)) {
+                // ログイン成功時
+                $_SESSION['user_name'] = $result['user_name'];
+                $_SESSION['password'] = $dbpassword;
+                header("Location: wrapper.php");
+                exit(); // リダイレクト後にスクリプトの実行を停止
+            } else {
+                // ログイン失敗時
+                $msg = 'ログインに失敗しました。';
+            }
+        
+            // リソースの解放
+            $sth = null;
+            $this->pdo = null;
+        
+            return $msg;
+    }
 
     //ログアウト処理
     function logout(){

@@ -1,7 +1,6 @@
 <?php 
 require_once('Modules/History.Class.php');
 require_once('Modules/Settings.Class.php');
-require_once('Modules/registerCommodity.Class.php');
 
 session_start();
 $Settings = new Settings();
@@ -16,53 +15,15 @@ $arlist = array();
 for($i=1;$i<=12;$i++){
     array_push($arlist,$i);
 }
-
+print_r($_POST);
 $history = new History();
-
-$regi = new registerCommodity();
-
 $year_get = $history->Year($user_id);
 if($_SERVER['REQUEST_METHOD']=='POST'){
-    if(isset($_POST['monthselect'])){
-        $monthselect = htmlspecialchars($_POST['monthselect']);
+    if(isset($_POST['month'])){
+        $month = htmlspecialchars($_POST['month']);
     }
-
-    if(isset($_POST['yearselect'])){
+    if(isset($_POST['year'])){
         $yearselect = htmlspecialchars($_POST['yearselect']);
-    }
-
-    if(isset($_POST['condition'])){
-        $condition = htmlspecialchars($_POST['condition']);
-    }
-
-    if(isset($monthselect) && isset($yearselect)&& isset($condition)){
-        //一覧データの取得
-        $datalist = $history->datalist($monthselect,$yearselect,$condition,$user_id);
-       
-        $ar = array();
-        //一覧データとcommodity_IDを紐づけてcommodities表から取得
-        foreach($datalist as $rec){
-            $CID = $rec['commodity_ID'];
-            $shoppingnum = $rec['shoppingnum'];
-            $commodity_name = $regi->commodityName($CID,$user_id,$shoppingnum);
-            $rec['cname'] = $commodity_name;
-            array_push($ar,$rec);
-        }
-    }
-}else{
-    //postされていないときもテーブルを表示させたい
-    $monthselect="";
-    $yearselect="";
-    $condition=1;
-    $datalist = $history->datalist($monthselect,$yearselect,$condition,$user_id);
-    $ar = array();
-    //一覧データとcommodity_IDを紐づけてcommodities表から取得
-    foreach($datalist as $rec){
-        $CID = $rec['commodity_ID'];
-        $shoppingnum = $rec['shoppingnum'];
-        $commodity_name = $regi->commodityName($CID,$user_id,$shoppingnum);
-        $rec['cname'] = $commodity_name;
-        array_push($ar,$rec);
     }
 }
 //セッション切れリダイレクト
@@ -128,20 +89,14 @@ if(isset($_SESSION) && empty($_SESSION)){
             <div class="row flex-no-wrap">
                 <!--オフキャンバスボタン-->
                 <div class="col">
-                    <header style="background-image: linear-gradient(to right, #d4af37, #ffd700, #d4af37);justify-content:left;">
+                    <header style="background-color:#e731fa;justify-content:left;">
                         <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-stars" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
                                 <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z"/>
                             </svg>
                         </button>
-                        <h2 style="color:white;">
-                            お買い物管理
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
-                                <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
-                                <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                            </svg>
-                        </h2>
+                        <h2 style="color:white;">お買い物管理</h2>
                     </header>
                 </div>
                 <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
@@ -210,19 +165,31 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                         <div class="row">
 
-                            <div class="col-12">
+                            <div class="col ">
 
-                                <h2 style="text-align:center;">購入履歴</h2>
+                                <h2 style="text-align:left;">購入履歴</h2>
 
                             </div>
+
+                            <div class="col">
+
+                              
+
+                            </div>
+
+                            <div class="col">
+
+                              
+
+                            </div>
+
                         </div>
 
                         <div class="row">
-                            <div class="col mb-3" style="display:flex;justify-content:center;">
-                                <form action="" method="post" id="form1" style="display:flex;">
-                                    <select name="yearselect" class="form-select" style="width:auto;" id="year" onchange="this.form.submit()">
-                                        <option value=""></option>    
-                                    <?php foreach ($year_get as $rec){ ?>
+                            <div class="col" style="display:flex;">
+                                <form action="" method="post" id="form1">
+                                    <select name="yearselect" class="form-select" style="width:auto;" id="year">
+                                        <?php foreach ($year_get as $rec){ ?>
                                             <?php if($yearselect==$rec){?>
                                                 <option value="<?= $yearselect ?>" selected><?= $yearselect ?></option>
                                             <?php }else{ ?>
@@ -230,80 +197,143 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-                                    年
-                                    <select name="monthselect" class="form-select custom-select-width" style="width:auto;"id="month" onchange="this.form.submit()">
-                                        <option value=""></option>    
+                                </form>
+                                年
+                                <form action="" method="post" id="form2">
+                                    <select name="month" class="form-select custom-select-width" style="width:auto;"id="month">
                                         <?php foreach($arlist as $rec){ ?>
-                                            <?php if($rec==$monthselect){ ?>
-                                                <option value="<?=$monthselect?>" selected><?=$monthselect?></option>
+                                            <?php if($rec==$month){ ?>
+                                                <option value="<?=$month?>" selected><?=$month?></option>
                                             <?php }else{?>
                                                 <option value="<?=$rec?>"><?=$rec?></option>
                                             <?php }?>
                                         <?php } ?>
                                     </select>
-                                    月
-                            </div>
-                            <div class="col-12 mb-3" style="display:flex;justify-content:center;">
-                                    <select name="condition" class="form-select custom-select-width" style="width:auto;"id="condition" onchange="this.form.submit()">
-                                    <?php if(isset($condition) && $condition==1){?>
-                                            <option value="1" selected>購入済みのみ</option>
-                                            <option value="2">購入検討品・購入済み</option>
-                                        <?php }elseif(isset($condition) && $condition==2){ ?>
-                                            <option value="1">購入済みのみ</option>
-                                            <option value="2" selected>購入検討品・購入済み</option>
-                                        <?php }else{?>
-                                            <option value="1">購入済みのみ</option>
-                                            <option value="2" selected>購入検討品・購入済み</option>
-                                        <?php }?>
+                                </form>
+                                月
+                                <form action="" method="post" id="form3">
+                                    <select name="condition" class="form-select custom-select-width" style="width:auto;"id="condition">
+                                        <option value="1">購入済みのみ</option>
+                                        <option value="2">購入検討品・購入済み</option>
                                     </select>
                                 </form>
                             </div>
-                        &nbsp;&nbsp;
-                        <div class="row">
-                            <div class="col-12" style="display:flex;justify-content:center;width:100%;">
-                                <button class="btn btn-primary" onclick="location.href='memopad.php'">お買い物ごとのメモ一覧</button>
-                            </div>
-                        </div>
-                        <div class="row">
+
                             <div class="col">
+
+                              
+
                             </div>
+
+                            <div class="col">
+
+                              
+
+                            </div>
+
+                            <div class="col">
+
+                              
+
+                            </div>
+
+                            <div class="col">
+
+                              
+
+                            </div>
+
+                            <div class="col">
+
+                              
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col">
+
+                                
+
+                            </div>
+
                             <div class="col">
                                 <br>
-                                <?php if(empty($ar)){?>
-                                <p style="text-align:center;">データがありません。</p>
-                                <?php }else{?>
                                     <div class="table-responsive-md table-responsive-sm table-responsive-lg table-responsive">
                                         <table class="table table-dark table-striped text-nowrap">
                                             <tr>
                                                 <th>何回目</th>
+                                                <th>memopad</th>
                                                 <th>日付</th>
                                                 <th>商品名</th>
                                                 <th>個数</th>
                                                 <th>単価</th>
                                                 <th>合計</th>
+                                                <th>残高</th>
                                                 <th>memo</th>
-                                                <th>画像</th>
                                             </tr>
                                             <tr>
-                                            <?php foreach($ar as $rec){?>
-                                                <td><?=$rec['shoppingnum']?>回目</td>
-                                                <td><?=$rec['date']?></td>
-                                                <td><?=$rec['cname']?></td>
-                                                <td><?=$rec['amount']?> 個</td>
-                                                <td><?=$rec['price']?> 円</td>
-                                                <td><?=$rec['total']?> 円</td>
-                                                <td><?=$rec['memo']?></td>
-                                                <td><a href="<?=$rec['image']?>" target="_blank">画像</a></td>
+                                                <td rowspan="5">1回目</td>
+                                                <td rowspan="5">テスト</td>
+                                                <td>2010-10-10</td>
+                                                <td>りんご</td>
+                                                <td>2個</td>
+                                                <td>100円</td>
+                                                <td>200円</td>
+                                                <td>30円</td>
+                                                <td>個数が足りなかった</td>
                                             </tr>
-                                            <?php }?>  
+                                            <tr>
+                                                <td>2010-10-10</td>
+                                                <td>りんご</td>
+                                                <td>2個</td>
+                                                <td>100円</td>
+                                                <td>200円</td>
+                                                <td>30円</td>
+                                                <td>個数が足りなかった</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2010-10-10</td>
+                                                <td>りんご</td>
+                                                <td>2個</td>
+                                                <td>100円</td>
+                                                <td>200円</td>
+                                                <td>30円</td>
+                                                <td>個数が足りなかった</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2010-10-10</td>
+                                                <td>りんご</td>
+                                                <td>2個</td>
+                                                <td>100円</td>
+                                                <td>200円</td>
+                                                <td>30円</td>
+                                                <td>個数が足りなかった</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2010-10-10</td>
+                                                <td>りんご</td>
+                                                <td>2個</td>
+                                                <td>100円</td>
+                                                <td>200円</td>
+                                                <td>30円</td>
+                                                <td>個数が足りなかった</td>
+                                            </tr>
                                         </table>
                                     </div>
-                                <?php }?>
-                                   
                                 </div>
                             <div class="col">
+
+                              
+
                             </div>
+
                         </div>
+
+                       
+
                     </div>
                 </div>
                 <!--右サイド終了-->

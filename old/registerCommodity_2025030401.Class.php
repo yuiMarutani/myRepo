@@ -102,11 +102,12 @@ class registerCommodity extends Settings{
             $fileSize = $_FILES['image']['size'];
 
             if ($fileSize > $maxSize) {
-            //ファイルが大きい場合、サーバ側でリサイズして保存（javascript）
+                $error_4.= "ファイルサイズが大きすぎます。<br>2MB以下のファイルをアップロードしてください。<br>";
             }
+
+        }
         return $error_4;
     }
-}
 
     function Total($price,$tax,$amount){
         //単価$price

@@ -295,20 +295,14 @@ if(isset($_SESSION) && empty($_SESSION)){
         <div class="row" style="white-space:nowrap;">
         <!--オフキャンバスボタン-->
             <div class="col-12">
-                <header style="background-image: linear-gradient(to right, #d4af37, #ffd700, #d4af37);justify-content:left;">
+                <header style="background-color:#e731fa;justify-content:left;">
                     <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-stars" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
                             <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z"/>
                         </svg>
                     </button>
-                    <h2 style="color:white;">
-                        お買い物管理
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
-                            <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
-                            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                        </svg>
-                    </h2>
+                    <h2 style="color:white;">お買い物管理</h2>
                 </header>
             </div>
         </div>
@@ -450,9 +444,9 @@ if(isset($_SESSION) && empty($_SESSION)){
                             <?php }?>
                         </td>
                     </tr>
-                    <tr style="display:flex;justify-content:center;">
+                    <tr>
                         <?php if(isset($InsertDB) && $InsertDB==1 || isset($updatedb) && isset($updateDB) &&  $updateDB==1){?>
-                            <td>
+                            <td align="right">
                                 <form action="" method="post">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary" name="edit">編集</button>
@@ -473,23 +467,21 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </div>
                                 </form>
                             </td>
-                        </tr>
                         <?php }else{ ?>
-                        <tr style="display:flex;justify-content:center;">
-                            <?php if(isset($edit)|| isset($updatedb) || isset($updateDB) && $updateDB==1){ ?>
-                                <td style="white-space:nowrap;" align="right">
-                                    <button type="submit" class="btn btn-primary" style="white-space:nowrap;" name="updatedb">更新</button>
-                                </td>
-                                <td style="white-space:nowrap;">
-                                    <button type="button" class="btn btn-primary" style="white-space:nowrap;" name="cancel" onclick="location.href='settings.php'">キャンセル</button>
-                                </td>
-                            <?php }else{ ?>
-                                <td></td>
-                                <td style="white-space:nowrap;">
-                                    <button type="submit" class="btn btn-primary" style="white-space:nowrap;"name="register">登録</button>
-                                </td>
-                            <?php }?>
-                        <?php } ?>
+                                <?php if(isset($edit)|| isset($updatedb) || isset($updateDB) && $updateDB==1){ ?>
+                                    <td style="white-space:nowrap;" align="right">
+                                        <button type="submit" class="btn btn-primary" style="white-space:nowrap;" name="updatedb">更新</button>
+                                    </td>
+                                    <td style="white-space:nowrap;">
+                                        <button type="button" class="btn btn-primary" style="white-space:nowrap;" name="cancel" onclick="location.href='settings.php'">キャンセル</button>
+                                    </td>
+                                <?php }else{ ?>
+                                    <td></td>
+                                    <td style="white-space:nowrap;">
+                                        <button type="submit" class="btn btn-primary" style="white-space:nowrap;"name="register">登録</button>
+                                    </td>
+                                <?php }?>
+                            <?php } ?>
                         </tr>
                     </table>
                 </form>

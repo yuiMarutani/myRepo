@@ -49,7 +49,17 @@ class User{
         }
         if($USERS_ID == ''){
             $err_msg.= 'ユーザIDが入力されていません。<br>';
+        }else{
+            //3文字以上、
+            $pattern = '/^.{3,}$/';
+            if(preg_match($pattern, $USERS_ID)){
+        
+            } else {
+                $err_msg.= 'ユーザIDは3文字以上で入力してください。<br>';
+            }
+
         }
+
         if($email == ''){
             $err_msg.= 'メールアドレスが入力されていません。<br>';
         }

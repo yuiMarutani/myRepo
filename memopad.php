@@ -11,62 +11,11 @@ $Settings = new Settings();
 $user_id = $Settings->setUserid($_SESSION['user_name'],$_SESSION['password']);
 $user_id = $Settings->getUserid();
 
-//1月から12月
-$arlist = array();
-for($i=1;$i<=12;$i++){
-    array_push($arlist,$i);
-}
-
+//$memopadの情報を取得
 $history = new History();
+$memopad = $history->memoPad($user_id);
 
-$regi = new registerCommodity();
-
-$year_get = $history->Year($user_id);
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    if(isset($_POST['monthselect'])){
-        $monthselect = htmlspecialchars($_POST['monthselect']);
-    }
-
-    if(isset($_POST['yearselect'])){
-        $yearselect = htmlspecialchars($_POST['yearselect']);
-    }
-
-    if(isset($_POST['condition'])){
-        $condition = htmlspecialchars($_POST['condition']);
-    }
-
-    if(isset($monthselect) && isset($yearselect)&& isset($condition)){
-        //一覧データの取得
-        $datalist = $history->datalist($monthselect,$yearselect,$condition,$user_id);
-       
-        $ar = array();
-        //一覧データとcommodity_IDを紐づけてcommodities表から取得
-        foreach($datalist as $rec){
-            $CID = $rec['commodity_ID'];
-            $shoppingnum = $rec['shoppingnum'];
-            $commodity_name = $regi->commodityName($CID,$user_id,$shoppingnum);
-            $rec['cname'] = $commodity_name;
-            array_push($ar,$rec);
-        }
-    }
-}else{
-    //postされていないときもテーブルを表示させたい
-    $monthselect="";
-    $yearselect="";
-    $condition=1;
-    $datalist = $history->datalist($monthselect,$yearselect,$condition,$user_id);
-    $ar = array();
-    //一覧データとcommodity_IDを紐づけてcommodities表から取得
-    foreach($datalist as $rec){
-        $CID = $rec['commodity_ID'];
-        $shoppingnum = $rec['shoppingnum'];
-        $commodity_name = $regi->commodityName($CID,$user_id,$shoppingnum);
-        $rec['cname'] = $commodity_name;
-        array_push($ar,$rec);
-    }
-}
 //セッション切れリダイレクト
-
 if(isset($_SESSION) && empty($_SESSION)){
     header('Location: https://marutani098723.com/new_app/login.php');
 }
@@ -142,6 +91,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                 <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                             </svg>
                         </h2>
+                      
                     </header>
                 </div>
                 <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
@@ -209,103 +159,41 @@ if(isset($_SESSION) && empty($_SESSION)){
                     <div class="container-fluid" style="padding:20px;">
 
                         <div class="row">
-
                             <div class="col-12">
-
-                                <h2 style="text-align:center;">購入履歴</h2>
-
+                                <h2>メモ一覧</h2>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col mb-3" style="display:flex;justify-content:center;">
-                                <form action="" method="post" id="form1" style="display:flex;">
-                                    <select name="yearselect" class="form-select" style="width:auto;" id="year" onchange="this.form.submit()">
-                                        <option value=""></option>    
-                                    <?php foreach ($year_get as $rec){ ?>
-                                            <?php if($yearselect==$rec){?>
-                                                <option value="<?= $yearselect ?>" selected><?= $yearselect ?></option>
-                                            <?php }else{ ?>
-                                                <option value="<?= $rec ?>"><?= $rec ?></option>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                    年
-                                    <select name="monthselect" class="form-select custom-select-width" style="width:auto;"id="month" onchange="this.form.submit()">
-                                        <option value=""></option>    
-                                        <?php foreach($arlist as $rec){ ?>
-                                            <?php if($rec==$monthselect){ ?>
-                                                <option value="<?=$monthselect?>" selected><?=$monthselect?></option>
-                                            <?php }else{?>
-                                                <option value="<?=$rec?>"><?=$rec?></option>
-                                            <?php }?>
-                                        <?php } ?>
-                                    </select>
-                                    月
-                            </div>
-                            <div class="col-12 mb-3" style="display:flex;justify-content:center;">
-                                    <select name="condition" class="form-select custom-select-width" style="width:auto;"id="condition" onchange="this.form.submit()">
-                                    <?php if(isset($condition) && $condition==1){?>
-                                            <option value="1" selected>購入済みのみ</option>
-                                            <option value="2">購入検討品・購入済み</option>
-                                        <?php }elseif(isset($condition) && $condition==2){ ?>
-                                            <option value="1">購入済みのみ</option>
-                                            <option value="2" selected>購入検討品・購入済み</option>
-                                        <?php }else{?>
-                                            <option value="1">購入済みのみ</option>
-                                            <option value="2" selected>購入検討品・購入済み</option>
-                                        <?php }?>
-                                    </select>
-                                </form>
-                            </div>
-                        &nbsp;&nbsp;
-                        <div class="row">
-                            <div class="col-12" style="display:flex;justify-content:center;width:100%;">
-                                <button class="btn btn-primary" onclick="location.href='memopad.php'">お買い物ごとのメモ一覧</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                            </div>
-                            <div class="col">
-                                <br>
-                                <?php if(empty($ar)){?>
-                                <p style="text-align:center;">データがありません。</p>
+                      
+                        <div class="row py-3 mb3">
+                        <!--テーブル-->
+                            <div class="col-12" style="display:flex;justify-content:center;">
+                                <?php if(empty($memopad)){?>
+                                    <span>データがありません。</span>
                                 <?php }else{?>
-                                    <div class="table-responsive-md table-responsive-sm table-responsive-lg table-responsive">
+                                    <div class="table-responsive-md table-responsive-sm table-responsive-lg table-responsive" style="display:flex;justify-content:center;">
                                         <table class="table table-dark table-striped text-nowrap">
                                             <tr>
-                                                <th>何回目</th>
-                                                <th>日付</th>
-                                                <th>商品名</th>
-                                                <th>個数</th>
-                                                <th>単価</th>
-                                                <th>合計</th>
-                                                <th>memo</th>
-                                                <th>画像</th>
+                                                <th>何回目の買い物</th>
+                                                <th>メモ</th>
                                             </tr>
-                                            <tr>
-                                            <?php foreach($ar as $rec){?>
-                                                <td><?=$rec['shoppingnum']?>回目</td>
-                                                <td><?=$rec['date']?></td>
-                                                <td><?=$rec['cname']?></td>
-                                                <td><?=$rec['amount']?> 個</td>
-                                                <td><?=$rec['price']?> 円</td>
-                                                <td><?=$rec['total']?> 円</td>
-                                                <td><?=$rec['memo']?></td>
-                                                <td><a href="<?=$rec['image']?>" target="_blank">画像</a></td>
-                                            </tr>
-                                            <?php }?>  
+                                            <?php foreach($memopad as $memo){?>
+                                                <tr>
+                                                    <td><?=$memo['shoppingnum']?>回目</td>
+                                                    <td><?=$memo['memopad']?></td>
+                                                </tr>
+                                            <?php } ?>
                                         </table>
                                     </div>
                                 <?php }?>
-                                   
+                            </div>
+                            <div class="col"></div>
+                            <div class="row">
+                                <div class="col" style="display:flex;justify-content:center;">
+                                    <button class="btn btn-primary"  onclick="location.href='history.php'">戻る</button>
                                 </div>
-                            <div class="col">
                             </div>
                         </div>
                     </div>
-                </div>
                 <!--右サイド終了-->
             </div>
 

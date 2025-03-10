@@ -68,7 +68,7 @@ class Settings{
         $error_3 ="";
         //$earningsが空のとき
         if($earnings==0 ||$earnings==""){
-            $error_1.="所持金を入力してください。";
+            $error_1.="所持金を入力してください。<br>";
         }
         
         if (!is_numeric($earnings)) {
@@ -148,10 +148,16 @@ class Settings{
         $stmt = $this->pdo->prepare($query);
         $execute = $stmt->execute(array($user_id,$shoppingnum));
         $result = $stmt->fetchAll();
-        $tax = $result[0]['tax'];
-        $earnings = $result[0]['earnings'];
-        $goal = $result[0]['goal'];
-
+        if(!empty($result[0]['tax']) && !empty($result[0]['earnings']) && !empty($result[0]['goal'])){
+            $tax = $result[0]['tax'];
+            $earnings = $result[0]['earnings'];
+            $goal = $result[0]['goal'];
+        }else{
+            $tax=0;
+            $earnings=0;
+            $goal=0;
+        }
+        
         return array($earnings,$goal,$tax);
     }
 }

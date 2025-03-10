@@ -79,9 +79,21 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                 <div class="row">
 
-                    <div class="col-12" style="text-align:right;">
+                    <div class="col">
+
+
+
+                    </div>
+
+                    <div class="col" style="text-align:right;">
 
                         <h1 style="font-weight:30;text-align:center;"><font size="5">パスワードリセット</font></h1>
+
+                    </div>
+
+                    <div class="col">
+
+
 
                     </div>
 
@@ -99,13 +111,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                     </div>
 
-                    <div class="col-12" style="display:flex;justify-content:center;">
+                    <div class="col" style="display:flex;justify-content:center;">
 
                             <table>
 
                                 <tr>
 
-                                    <td style="white-space:nowrap;">メールアドレスを入力して送信ボタンを押して下さい。</td>
+                                    <td>メールアドレスを入力して送信ボタンを押して下さい。</td>
 
                                 </tr>
 
@@ -113,9 +125,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                                     <td>
 
-                                        <div class="mb-3 col-12">
+                                        <div class="mb-3">
 
-                                            <input type="text" class="form-control" id="exampleFormControlInput1" name="email" >
+                                            <input type="text" class="form-control" id="exampleFormControlInput1" name="email">
 
                                         </div>
 
@@ -137,7 +149,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                 </div>
 
-                <span style="white-space:nowrap;">送信されたメールから新規パスワードを登録して下さい。</span>
+                <span>送信されたメールから新規パスワードを登録して下さい。</span>
 
                 <!--メール送信-->
 
@@ -149,16 +161,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                     <div class="row">
 
-                        <div class="col-12" style="text-align:center;display:flex;justify-content:center;">
+                        <div class="col">
+
+
+
+                        </div>
+
+                        <div class="col" style="text-align:center;">
 
                             <button type="button" class="btn btn-secondary" onclick="location.href='login.php'">戻る</button>
-                            &nbsp;
                             <?php if(isset($mailsend)&& $msg=="メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。"){?>
                                 <button type="submit" class="btn btn-primary" disabled>送信</button>
                             <?php }else{?>
                                 <button type="submit" class="btn btn-primary">送信</button>
                             <?php }?>
                         </div>
+
+                        <div class="col">
+
+
+
+                        </div>
+
                     </div>
 
                 </div>

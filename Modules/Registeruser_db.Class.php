@@ -19,41 +19,46 @@ class Registeruser_db{
 
         $err_msg = "";
         if ($rowCount > 0) {
-            $err_msg .= "ユーザID、メールアドレス、パスワードのいずれかが登録されているので登録できません。";
+            $err_msg .= "ユーザID、メールアドレス、パスワードのいずれかがご利用になれません。";
         } else {
         }
         return $err_msg;
     }
 
     public function checkduplicates($USERS_ID, $user_name, $email, $password) {
-        //重複のデータを登録できないようにする。行が１行でもあったらだめ
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "select count(*) from users where USERS_ID=? or email=? or password=?";
+       // 重複のデータを登録できないようにする。行が１行でもあったらだめ
+    $sql = "SELECT count(*) FROM users WHERE USERS_ID = ? OR email = ?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(array($USERS_ID, $email));
+    $rowCount = $stmt->fetchColumn();
+    
+    $msg = "";
+    if ($rowCount > 0) {
+        $msg = "ユーザID、メールアドレスのいずれかがご利用になれません。";
+    } else {
+        // usersに挿入
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users(USERS_ID, user_name, email, password) VALUES (?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $result = $stmt->execute(array($USERS_ID, $email, $password));
-        $rowCount = $stmt->fetchColumn();
+        $result = $stmt->execute(array($USERS_ID, $user_name, $email, $hashedPassword));
         
-        $msg = "";
-        if ($rowCount > 0) {
-            $msg = "ユーザID、メールアドレス、パスワードのいずれかが登録されているので登録できません。";
-        } else {
-            // usersに挿入
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO users(USERS_ID,user_name,email,password) VALUES(?,?,?,?)";
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute(array($USERS_ID, $user_name, $email, $password));
-            $rowCount = $stmt->fetchColumn();
+        if ($result) {
             $msg = "正常に登録できました。";
-
-            //　password_resetにemailのみ挿入
-            $sql_2 = "INSERT INTO password_reset(email) VALUES(?)";
-            $stmt = $this->pdo->prepare($sql_2);
-            $result = $stmt->execute(array($email));
-            
+        } else {
+            $msg = "登録に失敗しました。";
         }
-            
-        $stmt = null;
-        $this->pdo = null;
+
+        // password_resetにemailのみ挿入
+        $sql_2 = "INSERT INTO password_reset(email) VALUES (?)";
+        $stmt = $this->pdo->prepare($sql_2);
+        $result = $stmt->execute(array($email));
+        
+        if ($result) {
+            /* $msg .= " パスワードリセット情報も正常に登録できました。"; */
+        } else {
+           /*  $msg .= " パスワードリセット情報の登録に失敗しました。"; */
+        }
+    }
         return $msg;
     }
 }

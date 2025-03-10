@@ -210,7 +210,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
             if(isset($error_1) && $error_1=="" && isset($error_2) && $error_2 =="" && isset($error_3) && $error_3=="" ){
 
-                header('location:confirmCommodity.php',true,308);
+                header('location:confirmCommodity.php',true,307);
 
             }
 
@@ -231,7 +231,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $price = $get_edit['price'];
         $total = $get_edit['total'];
         $image_dir = $get_edit['image'];
-        $image = "";
         $memo = $get_edit['memo'];
     }
     
@@ -330,7 +329,6 @@ if(isset($delete)){
     $error_2 = "";
     $error_3 = "";
     $error_4 = "";
-    $_SESSION['message_2']="正常に削除しました。";
     header('location:registerCommodity.php');
     exit();
 }
@@ -389,20 +387,14 @@ if(isset($_SESSION) && empty($_SESSION)){
             <div class="row flex-nowrap">
                 <!--オフキャンバスボタン-->
                     <div class="col">
-                        <header style="background-image: linear-gradient(to right, #d4af37, #ffd700, #d4af37);justify-content:left;">
+                        <header style="background-color:#e731fa;justify-content:left;">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-stars" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
                                     <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z"/>
                                 </svg>
                             </button>
-                            <h2 style="color:white;">
-                                お買い物管理
-                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
-                                    <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
-                                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                                </svg>
-                            </h2>
+                            <h2 style="color:white;">お買い物管理</h2>
                         </header>
                     </div>
                     <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
@@ -469,9 +461,9 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                         <div class="row">
 
-                            <div class="col"></div>
+                            <div class="col-md-4"></div>
 
-                            <div class="col">
+                            <div class="col-md-4">
                                 <?php if(isset($_SESSION['message'])){?>
                                     <div class="alert alert-success" role="alert">
                                         <?=$_SESSION['message']?>
@@ -479,9 +471,10 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </div>
                                 <?php }?>
                                 <h3>商品候補登録</h3>
+
                             </div>
 
-                            <div class="col">
+                            <div class="col-md-4">
 
                                 
 
@@ -565,11 +558,13 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                     </div>    
                                                 </td>
                                             </tr>
+
                                             <tr>
+
                                                 <td>
-                                                    <select id="sel1" name="kensaku" class="form-select" onchange="submit(this.form)">
+                                                    <select id="sel1" name="kensaku" class="form-select" size="10" onchange="submit(this.form)">
                                                     <?php foreach($kensaku as $k=>$rec){?>
-                                                        <option value="<?=$rec['commodity_ID']?>" selected><?=$rec['name'] ?></option>
+                                                        <option value="<?=$rec['commodity_ID']?>"><?=$rec['name'] ?></option>
                                                     <?php } ?>
                                                     </select>
                                                 </td>
@@ -579,6 +574,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     <?php }?>
                                 </div>
                                 <script>
+
                                     window.onload=function(){
                                         var form1 = document.getElementById('form1');
 
@@ -607,119 +603,222 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         }
 
                                     }
-                                    $('.selectpicker').selectpicker('refresh');
+                          
                                 </script>
+
                                 <form action ="" method="post" id="form2" class="row g-3" enctype="multipart/form-data">
+
                                     <tr>
+
                                         <td>
+
                                             <!--再アップロードのメッセージ表示-->
+
                                             <?php if(isset($_SESSION['back']) && isset($_SESSION['image_dir'])){ ?>
-                                                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="width:auto;">
+
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
                                                     <?=$again_msg?>
+
                                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
                                                 </div>   
+
                                             <?php }?>
+
                                             <?php unset($_SESSION['image_dir']);?>
+
                                             <?php unset($_SESSION['back']);?>
+
                                             <?php unset($_SESSION['image']);?>
+
                                             <label for="name" style="display: block;">商品名</label>
+
                                             <div style="color:red;">
+
                                                 <?php if(isset($error_1)){echo $error_1;}?>
+
                                             </div>
+
                                             <div class="input-group" style="display:flex; justify-content:center; align-items:center;">
+
                                                 <input type="text" name="name" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($name)){ echo $name; }?>" style="flex: 1;">
+
                                             </div>
+
                                         </td>
+
                                     </tr>
+
                                     <tr>
+
                                         <td>
+
                                             <label for="price" style="display: block;">単価(１つ当たりの金額)</label>
+
                                             <div style="color:red;">
+
                                                 <?php if(isset($error_2)){echo $error_2;}?>
+
                                             </div>
+
                                             <div class="input-group mb-3">
+
                                                 <span class="input-group-text">￥</span>
+
                                                 <input type="text" name="price" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($price)){echo $price;}?>">
+
                                             </div>        
+
                                         </td>
+
                                     </tr>
+
                                     <tr>
+
                                         <td>
+
                                             <label for="amount" style="display: block;">個数</label>
+
                                             <div style="color:red;">
+
                                                 <?php if(isset($error_3)){echo $error_3;}?>
+
                                             </div>
+
                                             <div class="mb-3 input-group">
+
                                                 <input type="text" class="form-control" name="amount" id="exampleFormControlInput1" value="<?php if(isset($amount)){echo $amount;} ?>">
+
                                                 <span class="input-group-text">個</span>
+
                                             </div>        
+
                                         </td>
+
                                     </tr>
+
                                     <tr>
+
                                         <td>
+
                                             <label for="tax" style="display: block;">税率</label>
+
                                             <div class="mb-3">
+
                                                 <select class="form-select" name="tax">
+
                                                     <?php foreach($arlist as $rec){?>
+
                                                         <?php if($tax == $rec){ ?>
+
                                                             <option value="<?=$rec?>" selected><?=$tax?>%</option>
+
                                                         <?php }else{ ?>
+
                                                             <option value="<?=$rec?>"><?=$rec?>%</option>
+
                                                         <?php }?>
+
                                                     <?php }?>   
+
                                                 </select>         
+
                                             </div>
+
                                         </td>
+
                                     </tr>
+
                                     <tr>
+
                                         <td>
+
                                             <label for="image" style="display: block;">画像アップロード</label>
+
                                             <div style="color:red;">
+
                                                 <?php if(isset($error_4)){echo $error_4;}?>
+
                                             </div>
+
                                             <div class="mb-3">
+
                                                 <?php if(isset($image_dir) && $image_dir!==""){?>
+
                                                     <img id="image" src="<?=$image_dir?>" alt="画像イメージ" style="width:100%;">
+
                                                 <?php }?>
+
                                                 <div class="input-group mb-3">
+
                                                     <?php if(isset($image_dir) && $image_dir!==""){?>
+
                                                         <!--プレビュー-->
+
                                                         <div class="preview">
+
                                                             <div class="file">
+
                                                                 <label class="file__label">
+
                                                                     <input type="file" name="image" class="form-control" id="fileInput" style="display:none;">
+
                                                                     <input type="hidden" name="image_dir" id="image_dir" value="<?=$image_dir?>">
+
                                                                     <input type="hidden" name="uploadTime" id="uploadTime">
+
                                                                 </label>
+
                                                                 <p class="file__none"></p>
+
                                                             </div>
+
                                                             <div class="preview-img"></div>
+
                                                         </div>
+
                                                         <!--プレビュー終了-->
+
                                                         <label class="input-group-text" for="fileInput">ファイルの再選択</label>
+
                                                         <!--画像がキャンセルされた時-->
                                                         <input type="text" class="form-control" id="fileName" name="file_name">
-                                                        <?php if(isset($edit)){?>
-                                                        <?php }else{?>
-                                                            <button type="submit" class="btn btn-outline-secondary btn-sm" id="cancel2" name="cancel2" >キャンセル</button>
-                                                        <?php }?>
+                                                        <button type="submit" class="btn btn-outline-secondary btn-sm" id="cancel" name="cancel" >キャンセル</button>
                                                     <?php }else{?>
+
                                                         <!--画像プレビュー-->
+
                                                         <div class="preview">
+
                                                             <div class="file">
+
                                                                 <label class="file__label">
+
                                                                     <div class="input-group mb-3">
+
                                                                         <input type="file" name="image" class="form-control" id="fileInput">
+
                                                                         <!--画像がキャンセルされた時-->
+
                                                                         <button class="btn btn-outline-secondary btn-sm" type="submit" id="cancel" name="cancel" onclick="cancel();">キャンセル</button>
+
                                                                     </div>    
+
                                                                     <input type="hidden" name="uploadTime" id="uploadTime">
+
                                                                 </label>
+
                                                                 <p class="file__none"></p>
+
                                                             </div>
+
                                                             <div class="preview-img"></div>
+
                                                         </div>
+
                                                     <?php }?>
+
                                                 </div>
 
                                                 <!--画像プレビューjquery-->    
@@ -763,6 +862,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                         });
 
                                                     });
+
                                                 </script>
 
                                                 <!--イメージ画像の大きさを指定-->
@@ -782,132 +882,130 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 <!--ファイルの再選択-->
 
                                                 <script>
-                                                   document.getElementById('fileInput').addEventListener('change', function(event) {
-                                                    var fileName = this.files.length ? this.files[0].name : '';
-                                                    document.getElementById('fileName').value = fileName;
 
-                                                    const file = event.target.files[0];
-                                                    const maxWidth = 800;  // リサイズ後の最大幅
-                                                    const maxHeight = 600; // リサイズ後の最大高さ
-                                                    const maxFileSize = 2 * 1024 * 1024; // 2MB
+                                                    
 
-                                                    // 画像をリサイズする関数
-                                                    function resizeImage(file, maxWidth, maxHeight, callback) {
-                                                        const reader = new FileReader();
-                                                        reader.onload = function(event) {
-                                                            const img = new Image();
-                                                            img.onload = function() {
-                                                                const canvas = document.createElement('canvas');
-                                                                let width = img.width;
-                                                                let height = img.height;
+                                                    document.getElementById('fileInput').addEventListener('change', function(event) {
 
-                                                                if (width > height) {
-                                                                    if (width > maxWidth) {
-                                                                        height *= maxWidth / width;
-                                                                        width = maxWidth;
-                                                                    }
-                                                                } else {
-                                                                    if (height > maxHeight) {
-                                                                        width *= maxHeight / height;
-                                                                        height = maxHeight;
-                                                                    }
-                                                                }
+                                                        var fileName = this.files.length ? this.files[0].name : '';
 
-                                                                canvas.width = width;
-                                                                canvas.height = height;
-                                                                const ctx = canvas.getContext('2d');
-                                                                ctx.drawImage(img, 0, 0, width, height);
+                                                        document.getElementById('fileName').value = fileName;
 
-                                                                canvas.toBlob(callback, file.type);
-                                                            };
-                                                            img.src = event.target.result;
-                                                        };
-                                                        reader.readAsDataURL(file);
-                                                    }
 
-                                                    const originalTimestamp = Math.floor(file.lastModified / 1000); // 元のタイムスタンプを取得
 
-                                                    if (file.size > maxFileSize) {
-                                                        // ファイルサイズが2MBを超える場合にリサイズ
-                                                        resizeImage(file, maxWidth, maxHeight, function(resizedBlob) {
-                                                            const formData = new FormData();
-                                                            formData.append('file', resizedBlob, fileName);
-                                                            formData.append('fileName', fileName);
-                                                            formData.append('uploadTime', originalTimestamp); // 元のタイムスタンプを追加
+                                                        const file = event.target.files[0];
 
-                                                            fetch('https://marutani098723.com/new_app/uploads', {
-                                                                method: 'POST',
-                                                                body: formData
-                                                            })
-                                                            .then(response => response.json())
-                                                            .then(data => {
-                                                                console.log('Success:', data);
-                                                            })
-                                                            .catch(error => {
-                                                                console.error('Error:', error);
-                                                            });
-                                                        });
-                                                    } else {
-                                                        // ファイルサイズが2MB以下の場合はそのままアップロード
+                                                       
+
                                                         const formData = new FormData();
+
                                                         formData.append('file', file);
-                                                        formData.append('fileName', fileName);
-                                                        formData.append('uploadTime', originalTimestamp); // 元のタイムスタンプを追加
+
+                                                        formData.append('fileName', fileName); // ファイル名を追加
+
+                                                       
 
                                                         fetch('https://marutani098723.com/new_app/uploads', {
+
                                                             method: 'POST',
+
                                                             body: formData
+
                                                         })
+
                                                         .then(response => response.json())
+
                                                         .then(data => {
+
                                                             console.log('Success:', data);
+
                                                         })
+
                                                         .catch(error => {
+
                                                             console.error('Error:', error);
+
                                                         });
-                                                    }
-                                                });
 
-                                                // ボタンが押されたら空にする
-                                                document.getElementById('fileInput').addEventListener('click', function(event) {
-                                                    event.stopPropagation();
-                                                    var imageElement = document.getElementById('image');
-                                                    if (imageElement) {
-                                                        imageElement.remove();
-                                                    }
-                                                });
+                                                    });
 
-                                                // ファイルのタイムスタンプ
-                                                document.getElementById('form2').addEventListener('submit', function() {
-                                                    var uploadTime = new Date().getTime() / 1000; // Unixタイムスタンプ（秒）
-                                                    document.getElementById('uploadTime').value = uploadTime;
-                                                });
+                                                    //ボタンが押されたら空にする
 
-                                                // ファイルキャンセル
-                                                document.getElementById('cancel').addEventListener('click', function() {
+                                                    document.getElementById('fileInput').addEventListener('click', function() {
+
+                                                        event.stopPropagation();
+
+                                                        var imageElement = document.getElementById('image');
+
+                                                        if (imageElement) {
+
+                                                            imageElement.remove();
+
+                                                        }
+
+                                                        
+
+                                                    });
+
+                                                    //ファイルのタイムスタンプ
+
+                                                    document.getElementById('form2').addEventListener('submit', function() {
+
+                                                        var uploadTime = new Date().getTime() / 1000; // Unixタイムスタンプ（秒）
+
+                                                        document.getElementById('uploadTime').value = uploadTime;
+
+                                                    });
+
+                                                    //ファイルキャンセル
+
+                                                    document.getElementById('cancel').addEventListener('click', function() {
+
                                                     document.getElementById('fileInput').value = "";
-                                                    document.getElementById('fileName').value = "";
+
+                                                    document.getElementById('file_name').value = "";
+
                                                     document.getElementById('uploadTime').value = "";
-                                                });
+
+                                                    });
+
+                                              
+
+                                        
+
                                                 </script>
+
                                             </div>        
+
                                         </td>
+
                                     </tr>
+
                                     <tr>
+
                                         <td>
+
                                             <div class="mb-3">
+
                                                 <label for="memo" style="display: block;">メモ欄</label>
+
                                                 <textarea name="memo" class="form-control"><?php if(isset($memo)){ echo $memo; }?></textarea>
+
                                             </div>      
+
                                         </td>
+
                                     </tr>
+
                                     <tr>
+
                                         <td>
+
                                             <div class="mb-3" style="text-align:center;padding:10px;">
                                                 <?php if(isset($edit)){ ?>
                                                     <div style="display:flex;justify-content:center;">
                                                         <form action="" method="post">
-                                                            <button type="button" name="return" class="btn btn-primary" id="return" onclick="location.href='registerCommodity.php'">戻る</button>
+                                                            <button type="button" name="return" class="btn btn-warning" id="return" onclick="location.href='registerCommodity.php'">戻る</button>
                                                             &nbsp;&nbsp;
                                                             <input type="hidden" name="cid" value="<?=$cid?>">
                                                             <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($_POST['order_id']); ?>">
@@ -916,31 +1014,35 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                     </div>
                                                 </div>
                                                 <?php }else{?>
-                                                    <button type="button" name="clear" class="btn btn-primary" onclick="location.href='registerCommodity.php'" id="btn-2">クリア</button>&nbsp;
                                                     <button type="submit" name="submitC" class="btn btn-warning" onclick="location.href='confirmCommodity.php'" id="btn">確認</button>
                                                 <?php }?>
                                             </div>
+
                                         </td>
+
                                     </tr>
+
                                 </form>
+
                             </div>
-                            <div class="col-4">
+
+                            <div class="col-md-4">
+
+                                
+
                             </div>
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-4"></div>
+                                <div class="col-4">
                                 <!--商品編集の時は表示させない-->
                                 <?php if(!isset($edit)){?>
-                                    <?php if(empty($CName)){?>
-                                        <span style="display:flex;justify-content:center;">データがありません。</span>
+                                    <?php if($CName ==''){?>
+                                        <span>データがありません。</span>
                                     <?php }else{ ?>
                                         <?php if(isset($_SESSION['message_2'])){ ?>
-                                            <div class="row">
-                                                <div class="col-12" style="display:flex;justify-content:center;">
-                                                    <div class="alert alert-success" role="alert" style="width:auto;">
-                                                        <?php echo $_SESSION['message_2']; ?>
-                                                        <?php unset($_SESSION['message_2']); ?>
-                                                    </div>
-                                                </div>
+                                            <div class="alert alert-success" role="alert">
+                                                <?php echo $_SESSION['message_2']; ?>
+                                                <?php unset($_SESSION['message_2']); ?>
                                             </div>
                                         <?php } ?>
                                          <!--登録されたものがここに表示されるので、ここから編集削除、購入確定は確定のみ-->
@@ -983,12 +1085,22 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         </table>
                                     <?php } ?>
                                 <?php } ?>
+                                    
+                                   
                                 <!--商品リスト終了-->
+                                <div class="col-4"></div>
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
-            </div>
+
+        </div>
+
     </main>
+
 </body>
+
 </html>

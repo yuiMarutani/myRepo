@@ -210,7 +210,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
             if(isset($error_1) && $error_1=="" && isset($error_2) && $error_2 =="" && isset($error_3) && $error_3=="" ){
 
-                header('location:confirmCommodity.php',true,308);
+                header('location:confirmCommodity.php',true,307);
 
             }
 
@@ -330,7 +330,6 @@ if(isset($delete)){
     $error_2 = "";
     $error_3 = "";
     $error_4 = "";
-    $_SESSION['message_2']="正常に削除しました。";
     header('location:registerCommodity.php');
     exit();
 }
@@ -389,20 +388,14 @@ if(isset($_SESSION) && empty($_SESSION)){
             <div class="row flex-nowrap">
                 <!--オフキャンバスボタン-->
                     <div class="col">
-                        <header style="background-image: linear-gradient(to right, #d4af37, #ffd700, #d4af37);justify-content:left;">
+                        <header style="background-color:#e731fa;justify-content:left;">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-stars" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
                                     <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z"/>
                                 </svg>
                             </button>
-                            <h2 style="color:white;">
-                                お買い物管理
-                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
-                                    <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
-                                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                                </svg>
-                            </h2>
+                            <h2 style="color:white;">お買い物管理</h2>
                         </header>
                     </div>
                     <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
@@ -907,7 +900,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 <?php if(isset($edit)){ ?>
                                                     <div style="display:flex;justify-content:center;">
                                                         <form action="" method="post">
-                                                            <button type="button" name="return" class="btn btn-primary" id="return" onclick="location.href='registerCommodity.php'">戻る</button>
+                                                            <button type="button" name="return" class="btn btn-warning" id="return" onclick="location.href='registerCommodity.php'">戻る</button>
                                                             &nbsp;&nbsp;
                                                             <input type="hidden" name="cid" value="<?=$cid?>">
                                                             <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($_POST['order_id']); ?>">

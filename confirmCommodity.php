@@ -4,10 +4,6 @@ session_start();
 
 require_once('Modules/registerCommodity.Class.php');
 
-
-
-
-
 $registerC = new registerCommodity();
 
 
@@ -15,7 +11,6 @@ $registerC = new registerCommodity();
 //user_idの設定
 
 $user_id = $registerC->setUserid($_SESSION['user_name'],$_SESSION['password']);
-
 $user_id = $registerC->getUserid();
 
 
@@ -23,80 +18,48 @@ $user_id = $registerC->getUserid();
 //お買い物回数の算出
 
 $shoppingnum = $registerC->shoppingNum($user_id);
-
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
     //商品名
-
     $name = htmlspecialchars($_POST['name']);
 
-
-
     //金額
-
     $price = htmlspecialchars($_POST['price']);
 
-
-
     //量
-
     $amount = htmlspecialchars($_POST['amount']);
 
 
-
     //税金
-
     $tax = htmlspecialchars($_POST['tax']);
 
-
-
     //メモ
-
     $memo = htmlspecialchars($_POST['memo']);
 
-
-
     //合計金額
-
     $total = $registerC->Total($price,$tax,$amount); 
 
 
-
-
-
     //ファイル名
-
     if(isset($_POST['file_name'])){
-
         $file_name = htmlspecialchars($_POST['file_name']);
-
     }
 
 
 
     if(isset($_POST['image_dir'])){
-
         $image_dir = htmlspecialchars($_POST['image_dir']);
-
     }
 
-
-
     //確定ボタン押された時
-
     if(isset($_POST['confirm'])){
-
         $confirm = htmlspecialchars($_POST['confirm']);
-
         //確定処理
-
         //画像がなかった時のimage_dir
-
         if(!isset($image_dir) || empty($image_dir)){
-
             $image_dir = "";
-
         }
+
         //2重登録防止
         $verify_insert = $registerC->verify_insert($user_id,$tax,$amount,$price,$total,$image_dir,$shoppingnum,$memo,$name);
         if($verify_insert==0){
@@ -114,123 +77,78 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 
     //戻るボタンが押されたとき
-
       if(isset($_POST['back'])){
-
         $back = htmlspecialchars($_POST['back']);
-
     }
 
 
 
     //バリデーションにひっかかった時
-
     //1回目で画像が渡った時のタイムスタンプ
-
     if(isset($_POST['uploadTime']) && $_POST['uploadTime']!==""){
-
-        $uploadTime = floor(htmlspecialchars($_POST['uploadTime']));
-
+        $uploadTimeInt = (int)htmlspecialchars($_POST['uploadTime']);
+        $uploadTimeFloat = (float)htmlspecialchars($_POST['uploadTime']);
+    
+        // タイムスタンプの整数部分から作成
+        $uploadTime = new DateTime("@$uploadTimeInt");
+    
+        // 更新されたUnixのタイムスタンプに時差を追加
+        $updatedUnixTimestamp = $uploadTime->getTimestamp() + ($uploadTimeFloat - $uploadTimeInt);
+    
     }
 
 
 
     //ファイルの日付生成
-
     if(isset($uploadTime)){
-
-        $date = date('YmdHis', $uploadTime);
-
+        //日付をフォーマットする
+        $date = date('YmdHis', $updatedUnixTimestamp);
+        
     }
-
-
 
     //画像が再選択されたとき
-
     if(isset($_POST['image'])){
-
         $image = htmlspecialchars($_POST['image']);
-
     }
 
-
-
-  
 
     //画像のディレクトリ
-
     if(isset($image_dir) && $image_dir!==""){
-
         if(isset($file_name) && $file_name==""){
-
             //再選択されていないとき
-
-                
-
         }else{
-
             //再選択されているとき
-
             if(isset($date)&&$file_name){
-
                 $image_dir = "https://marutani098723.com/new_app/uploads/".$date."_".$file_name;
-
             }
-
         }
-
     }else{
-
         //バリデーションパスして1回目で画像が渡った時
-
         if(!empty($_FILES['image']['name'])){
-
             if(isset($date) && $date!==""){
-
                 $image_dir = "https://marutani098723.com/new_app/uploads/".$date."_".$_FILES['image']['name'];
-
             }
-
         }else{
-
             if(isset($date) && $date !=="" && isset($file_name)&& $file_name!==""){
-
                 //バリデーションで引っかかった時
-
                 $image_dir = "https://marutani098723.com/new_app/uploads/".$date."_".$file_name;
-
             }
-
         }
 
     }
-
-  
-
-
 
     if(isset($back)){
 
         //headerで戻る
-
         $_SESSION['name'] = $name;
-
         $_SESSION['price'] = $price;
-
         $_SESSION['amount'] = $amount;
-
         $_SESSION['tax'] = $tax;
-
         $_SESSION['image'] = $image;
-
         $_SESSION['memo'] = $memo;
-
         $name = $_SESSION['name'];
-
         $price =  $_SESSION['price'];
-
         $amount = $_SESSION['amount'];
-
         $tax = $_SESSION['tax'];
 
         if(isset($image_dir)){
@@ -242,22 +160,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         if(isset($image_dir) && $image_dir<>""){
             $_SESSION['back'] = 1; //戻るボタンのフラグ
         }
+
         header('location:registerCommodity.php');
-
         exit();
-
     }
-
-
 
 }
 
 //セッション切れリダイレクト
 
 if(isset($_SESSION) && empty($_SESSION)){
-
     header('Location: https://marutani098723.com/new_app/login.php');
-
 }
 
 ?>
@@ -303,7 +216,7 @@ if(isset($_SESSION) && empty($_SESSION)){
             <div class="row flex-no-wrap">
                 <!--オフキャンバスボタン-->
                 <div class="col">
-                    <header style="background-color:#e731fa;justify-content:left;">
+                    <header style="background-image: linear-gradient(to right, #d4af37, #ffd700, #d4af37);justify-content:left;">
                         <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-stars" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
@@ -524,7 +437,7 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                                     <?php }?>
 
-                                    <button type="submit" name="back" id="button1" class="btn btn-secondary" value="1">戻る</button>
+                                    <button type="submit" name="back" id="button1" class="btn btn-primary" value="1">戻る</button>
 
                                 </form>&nbsp;
 
@@ -564,7 +477,7 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                                     <?php }?>
 
-                                    <button type="submit" name="confirm" class="btn btn-primary">候補確定</button>
+                                    <button type="submit" name="confirm" class="btn btn-warning">候補確定</button>
 
                                 </form>
 

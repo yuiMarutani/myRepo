@@ -48,10 +48,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $password = '';
 }
 
-//セッション切れリダイレクト
-if(isset($_SESSION) && empty($_SESSION)){
-    header('Location: https://marutani098723.com/new_app/login.php');
-}
 ?>
 <?php if($mode  == "validate" || $mode == "return"){ ?>
 <!DOCTYPE html>
@@ -79,8 +75,8 @@ if(isset($_SESSION) && empty($_SESSION)){
                     <div class="col">
 
                     </div>
-                    <div class="col" style="text-align:right;">
-                        <h1 style="font-weight:100;color:green;text-align:center;">新規登録</h1>
+                    <div class="col mb-3" style="text-align:right;">
+                        <h1 style="font-weight:100;color:green;text-align:center;white-space:nowrap;">新規登録</h1>
                     </div>
                     <div class="col">
 
@@ -89,24 +85,25 @@ if(isset($_SESSION) && empty($_SESSION)){
             </div>
             <div class="container text-center">
                 <div class="row">
-                    <div class="col">
-
-                    </div>
-                    <div class="col" style="">
-                    <!--bootstrapエラーメッセージの表示-->  
-                    <?php if(isset($err_msg) && $err_msg!=''){ ?>
-                        <div class="alert alert-danger" role="alert">
-                            <?php echo $err_msg;?>
-                        </div>
-                    <?php }?>
-                    <?php if(isset($err_msg_dup) && $err_msg_dup!=''){ ?>
-                        <div class="alert alert-dark" role="alert">
-                            <?php echo $err_msg_dup;?>
-                        </div>
-                    <?php } ?>      
-                    <table>
+                    <div class="col-12" style="text-align:center;white-space:nowrap;">
+                        <!--bootstrapエラーメッセージの表示-->  
+                        <?php if(isset($err_msg) && $err_msg!=''){ ?>
+                            <div style="display:flex;justify-content:center;white-space:nowrap;">
+                                <div class="alert alert-danger" role="alert">
+                                    <?php echo $err_msg;?>
+                                </div>
+                            </div>
+                        <?php }?>
+                        <?php if(isset($err_msg_dup) && $err_msg_dup!=''){ ?>
+                            <div style="display:flex;justify-content:center;white-space:wrap;">
+                                <div class="alert alert-dark" role="alert">
+                                    <?php echo $err_msg_dup;?>
+                                </div>
+                            </div>
+                        <?php } ?>      
+                            <table style="display:flex;justify-content:center;">
                                 <tr>
-                                    <th>ユーザ名</th>
+                                    <th style="white-space:nowrap;">ユーザ名</th>
                                     <td>
                                         <div class="mb-3">
                                             <input type="text" name="user_name" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($user_name)){ echo $user_name; } ?>" >
@@ -114,7 +111,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>ユーザID</th>
+                                    <th style="white-space:nowrap;">ユーザID</th>
                                     <td>
                                         <div class="mb-3">
                                             <input type="text" name="USERS_ID" class="form-control" id="exampleFormControlInput1" value="<?php if(isset($USERS_ID)){ echo $USERS_ID; } ?>" >
@@ -122,7 +119,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>メールアドレス</th>
+                                    <th style="white-space:nowrap;">メールアドレス</th>
                                     <td>
                                         <div class="mb-3">
                                             <input type="email" name="email" class="form-control" id="exampleFormControlInput2" value="<?php if(isset($email)){ echo $email; } ?>" >
@@ -130,7 +127,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>パスワード</th>
+                                    <th style="white-space:nowrap;">パスワード</th>
                                     <td>
                                         <div class="mb-3">
                                             <input type="text" name="password" class="form-control" id="exampleFormControlInput3" value="<?php if(isset($password)){ echo $password; } ?>" >
@@ -138,29 +135,20 @@ if(isset($_SESSION) && empty($_SESSION)){
                                     </td>
                                 </tr>
                             </table>
+                        </div>
                     </div>
-                    <div class="col">
-
-                    </div>
-                </div>
-                <div class="card container" style="width: 18rem;display:flex;justify-content:center;">
-                    <div class="card-body" >
-                    ※パスワードは少なくとも1つの小文字、1つの大文字、1つの数字を含み、8文字以上24文字以下で作成して下さい。
+                <div class="card container" style="width: 18rem;display:flex;justify-content:center;text-align:left;">
+                    <div class="card-body">
+                        ※パスワードは少なくとも1つの小文字、1つの大文字、1つの数字を含み、8文字以上24文字以下で作成して下さい。
                     </div>
                 </div>
                 <br>
                 <!--確認ボタン-->
                 <div class="container text-center;">
                     <div class="row">
-                        <div class="col">
-
-                        </div>
-                        <div class="col" style="text-align:center;">
+                        <div class="col-12" style="text-align:center;">
                             <button type="button" class="btn btn-secondary" onclick="location.href='login.php'">戻る</button>
                             <input type="submit" class="btn btn-primary"  value="確認">
-                        </div>
-                        <div class="col">
-
                         </div>
                     </div>
                 </div>
