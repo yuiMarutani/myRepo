@@ -293,7 +293,11 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 <td><?=$rec['price']?> 円</td>
                                                 <td><?=$rec['total']?> 円</td>
                                                 <td><?=$rec['memo']?></td>
-                                                <td><a href="<?=$rec['image']?>" target="_blank">画像</a></td>
+                                                <td>
+                                                    <?php if($rec['image']<>""){?>
+                                                        <a href="<?=$rec['image']?>" target="_blank">画像</a>
+                                                    <?php } ?>
+                                                </td>
                                             </tr>
                                             <?php }?>  
                                         </table>

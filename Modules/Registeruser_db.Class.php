@@ -19,7 +19,7 @@ class Registeruser_db{
 
         $err_msg = "";
         if ($rowCount > 0) {
-            $err_msg .= "ユーザID、メールアドレス、パスワードのいずれかがご利用になれません。";
+            $err_msg .= "既に登録されています。";
         } else {
         }
         return $err_msg;
@@ -34,7 +34,7 @@ class Registeruser_db{
     
     $msg = "";
     if ($rowCount > 0) {
-        $msg = "ユーザID、メールアドレスのいずれかがご利用になれません。";
+        $msg = "既に登録されています。";
     } else {
         // usersに挿入
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);

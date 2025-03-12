@@ -192,7 +192,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                             <p>言語：PHP 8.3 </p>
                             <p>サーバ：お名前.com</p>
                             <p>データベース: phpMyAdmin(MySQL)</p>
-                            <p>その他：Bootstrap5,jQuery,JavaScript,PHPMailer,OPP(オブジェクト指向)</p>
+                            <p>その他：Bootstrap5,jQuery,JavaScript,PHPMailer,OPP(オブジェクト指向),PokemonAPI,Compressor.js</p>
                             <h2 id="usage" style="font-family: sans-serif;text-align:left;">Usage</h1>
                             <div class="card mb-3">
                                 <div class="card-body">

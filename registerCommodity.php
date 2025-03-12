@@ -259,12 +259,14 @@ $dlist = array();
 foreach($commodities as $k=>$v){
     $CID = $v['commodity_ID'];
     $order_id = $v['order_id'];
+    //shoppingnumがなかったら、新に挿入する
     $CName = $registerC->commodityName($CID,$user_id,$shoppingnum);
     $value['cid'] = $CID;
     $value['cname'] = $CName;
     $value['order_id'] = $order_id;
     array_push($dlist,$value);
 }
+
 //戻るボタンで返ってきたとき
 
 if(isset($_SESSION['name'])){
@@ -370,7 +372,7 @@ if(isset($_SESSION) && empty($_SESSION)){
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-
+    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.0.7/dist/compressor.min.js"></script>
 </head>
 
 <body>
@@ -567,11 +569,17 @@ if(isset($_SESSION) && empty($_SESSION)){
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <select id="sel1" name="kensaku" class="form-select" onchange="submit(this.form)">
-                                                    <?php foreach($kensaku as $k=>$rec){?>
-                                                        <option value="<?=$rec['commodity_ID']?>" selected><?=$rec['name'] ?></option>
-                                                    <?php } ?>
+                                                    <select name="kensaku" class="form-select" multiple onchange="this.form.submit()">
+                                                    <?php if(isset($kensaku)){?> 
+                                                        <option value="" disabled selected>ここを押して選択肢から選んで下さい。</option>
+                                                    <?php }else{?>
+                                                        <option value="" disabled selected>選択なし</option>
+                                                    <?php }?>    
+                                                        <?php foreach($kensaku as $k=>$rec){?>
+                                                            <option value="<?=$rec['commodity_ID']?>"><?=$rec['name'] ?></option>
+                                                        <?php } ?>
                                                     </select>
+                                                  
                                                 </td>
                                             </tr>
                                         </form>
@@ -782,91 +790,54 @@ if(isset($_SESSION) && empty($_SESSION)){
                                                 <!--ファイルの再選択-->
 
                                                 <script>
-                                                   document.getElementById('fileInput').addEventListener('change', function(event) {
-                                                    var fileName = this.files.length ? this.files[0].name : '';
-                                                    document.getElementById('fileName').value = fileName;
+                                                        document.getElementById('fileInput').addEventListener('change', async function(event) {
+                                                        var fileName = this.files.length ? this.files[0].name : '';
+                                                        document.getElementById('fileName').value = fileName;
 
-                                                    const file = event.target.files[0];
-                                                    const maxWidth = 800;  // リサイズ後の最大幅
-                                                    const maxHeight = 600; // リサイズ後の最大高さ
-                                                    const maxFileSize = 2 * 1024 * 1024; // 2MB
+                                                        const file = event.target.files[0];
+                                                        const chunkSize = 1024 * 1024; // 1MB
+                                                        const totalChunks = Math.ceil(file.size / chunkSize);
+                                                        const originalTimestamp = Math.floor(file.lastModified / 1000); // 元のタイムスタンプを取得
 
-                                                    // 画像をリサイズする関数
-                                                    function resizeImage(file, maxWidth, maxHeight, callback) {
-                                                        const reader = new FileReader();
-                                                        reader.onload = function(event) {
-                                                            const img = new Image();
-                                                            img.onload = function() {
-                                                                const canvas = document.createElement('canvas');
-                                                                let width = img.width;
-                                                                let height = img.height;
+                                                        let allChunksUploaded = true;
 
-                                                                if (width > height) {
-                                                                    if (width > maxWidth) {
-                                                                        height *= maxWidth / width;
-                                                                        width = maxWidth;
-                                                                    }
-                                                                } else {
-                                                                    if (height > maxHeight) {
-                                                                        width *= maxHeight / height;
-                                                                        height = maxHeight;
-                                                                    }
-                                                                }
+                                                        for (let i = 0; i < totalChunks; i++) {
+                                                            const start = i * chunkSize;
+                                                            const end = Math.min(start + chunkSize, file.size);
+                                                            const chunk = file.slice(start, end);
 
-                                                                canvas.width = width;
-                                                                canvas.height = height;
-                                                                const ctx = canvas.getContext('2d');
-                                                                ctx.drawImage(img, 0, 0, width, height);
-
-                                                                canvas.toBlob(callback, file.type);
-                                                            };
-                                                            img.src = event.target.result;
-                                                        };
-                                                        reader.readAsDataURL(file);
-                                                    }
-
-                                                    const originalTimestamp = Math.floor(file.lastModified / 1000); // 元のタイムスタンプを取得
-
-                                                    if (file.size > maxFileSize) {
-                                                        // ファイルサイズが2MBを超える場合にリサイズ
-                                                        resizeImage(file, maxWidth, maxHeight, function(resizedBlob) {
                                                             const formData = new FormData();
-                                                            formData.append('file', resizedBlob, fileName);
+                                                            formData.append('file', chunk, fileName);
                                                             formData.append('fileName', fileName);
                                                             formData.append('uploadTime', originalTimestamp); // 元のタイムスタンプを追加
+                                                            formData.append('chunkIndex', i);
+                                                            formData.append('totalChunks', totalChunks);
 
-                                                            fetch('https://marutani098723.com/new_app/uploads', {
-                                                                method: 'POST',
-                                                                body: formData
-                                                            })
-                                                            .then(response => response.json())
-                                                            .then(data => {
-                                                                console.log('Success:', data);
-                                                            })
-                                                            .catch(error => {
-                                                                console.error('Error:', error);
-                                                            });
-                                                        });
-                                                    } else {
-                                                        // ファイルサイズが2MB以下の場合はそのままアップロード
-                                                        const formData = new FormData();
-                                                        formData.append('file', file);
-                                                        formData.append('fileName', fileName);
-                                                        formData.append('uploadTime', originalTimestamp); // 元のタイムスタンプを追加
+                                                            try {
+                                                                const response = await fetch('https://marutani098723.com/new_app/uploads', {
+                                                                    method: 'POST',
+                                                                    body: formData
+                                                                });
 
-                                                        fetch('https://marutani098723.com/new_app/uploads', {
-                                                            method: 'POST',
-                                                            body: formData
-                                                        })
-                                                        .then(response => response.json())
-                                                        .then(data => {
-                                                            console.log('Success:', data);
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('Error:', error);
-                                                        });
-                                                    }
-                                                });
+                                                                if (!response.ok) {
+                                                                    throw new Error(`Upload failed: ${response.statusText}`);
+                                                                }
+
+                                                                const data = await response.json();
+                                                                console.log(`Chunk ${i + 1}/${totalChunks} uploaded successfully:`, data);
+                                                            } catch (error) {
+                                                                console.error(`Error uploading chunk ${i + 1}/${totalChunks}:`, error);
+                                                                allChunksUploaded = false;
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        if (allChunksUploaded) {
+                                                            console.log('All chunks uploaded successfully.');
+                                                        } else {
+                                                            console.log('Some chunks failed to upload.');
+                                                        }
+                                                    });
 
                                                 // ボタンが押されたら空にする
                                                 document.getElementById('fileInput').addEventListener('click', function(event) {

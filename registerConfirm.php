@@ -360,9 +360,9 @@ if(isset($_SESSION) && empty($_SESSION)){
 
                         <div class="col">
 
-                            <div class="container" style="justify-content:center;">
+                            <div class="container table-responsive" style="justify-content:center;">
 
-                                <table class="table table-dark table-hover table-responsive text-nowrap" style="">
+                                <table class="table table-dark table-hover">
 
                                     <tr>
 
@@ -409,7 +409,7 @@ if(isset($_SESSION) && empty($_SESSION)){
                                         <?php foreach($arlist2 as $rec){?>
                                             <input type="hidden" name="<?=$rec['order_id']?>" value="<?=$rec['order_id']?>">
                                         <?php } ?>
-                                        <button type="submit" name="confirm" class="btn btn-warning" onclick="location.href='confirm.php'">確定</button>
+                                        <button type="submit" name="confirm" class="btn btn-warning">確定</button>
                                     </form>
                                 </div>
                             </div>

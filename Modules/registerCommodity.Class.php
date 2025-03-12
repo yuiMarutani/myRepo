@@ -98,11 +98,12 @@ class registerCommodity extends Settings{
             }
 
             //ファイルサイズ
-            $maxSize = 2 * 1024 * 1024; // 2MB
+            $maxSize = 32* 1024 * 1024; // 32MB
             $fileSize = $_FILES['image']['size'];
 
             if ($fileSize > $maxSize) {
             //ファイルが大きい場合、サーバ側でリサイズして保存（javascript）
+            $error_4.="32MBを超えてアップロードできません。<br>";
             }
         return $error_4;
     }
@@ -181,7 +182,7 @@ class registerCommodity extends Settings{
     }
 
     function kensaku($name2,$user_id){
-        $name2 = $name2."%";
+        $name2 = "%".$name2."%";
         $query = "SELECT name,commodity_ID from commodities WHERE name LIKE ? AND user_id=?";
         $stmt = $this->pdo->prepare($query);
         $result = $stmt->execute(array($name2,$user_id));
@@ -211,9 +212,9 @@ class registerCommodity extends Settings{
     }
 
     function getCommodities($user_id,$shoppingnum){
-        $query = "SELECT * from orders WHERE user_id = ? AND shoppingnum = ? AND purchased = ? AND del_flg<>?";
+        $query = "SELECT * from orders WHERE user_id = ? AND shoppingnum = ? AND purchased = ? AND shopped=? AND del_flg<>?";
         $stmt = $this->pdo->prepare($query);
-        $result = $stmt->execute(array($user_id,$shoppingnum,0,1));
+        $result = $stmt->execute(array($user_id,$shoppingnum,0,0,1));
         $result = $stmt->fetchAll();
 
         return $result;
@@ -221,9 +222,10 @@ class registerCommodity extends Settings{
 
     //Commodity_IDの配列から商品名を取得
     function commodityName($CID,$user_id,$shoppingnum){
-        $query ="SELECT name FROM commodities WHERE user_id=? AND commodity_ID =? AND shoppingnum=?";
+        //お買い物アプリで紐づくのは、shoppingnumは関係ない
+        $query ="SELECT name FROM commodities WHERE user_id=? AND commodity_ID =?";
         $stmt = $this->pdo->prepare($query);
-        $result = $stmt->execute(array($user_id,$CID,$shoppingnum));
+        $result = $stmt->execute(array($user_id,$CID));
         $result = $stmt->fetchColumn();
 
         return $result;
@@ -250,8 +252,33 @@ class registerCommodity extends Settings{
         }
         $result = $stmt->execute(array($tax,$amount,$price,$total,$image_dir,$memo,$order_id));
         $result = $stmt->fetchColumn();
-        //commodities表の変更
 
+        //commodities表の変更
+        //もしcidとnameとuser_idが不一致でデータがないならcommoditiesテーブルinsert処理
+        $query = "SELECT count(*) FROM commodities WHERE user_id=? AND commodity_ID=? AND name = ?";
+        $stmt = $this->pdo->prepare($query);
+        $result = $stmt->execute(array($user_id,$cid,$name));
+        $result = $stmt->fetchColumn();
+
+        if($result==0){
+            $query = "INSERT INTO commodities(user_id,name,shoppingnum) VALUES(?,?,?)";
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute(array($user_id,$name,$shoppingnum));
+
+            //insertしたcommodity_IDを取得
+            $query = "SELECT commodity_ID FROM commodities WHERE user_id=? AND name=? and shoppingnum=?";
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute(array($user_id,$name,$shoppingnum));
+            $cid = $stmt->fetchColumn();
+                
+            //orders表のcidの変更
+            $query = "UPDATE orders SET commodity_ID = ? WHERE order_id=?";
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute(array($cid,$order_id));
+
+        }
+
+        
         return $result;
     }
 

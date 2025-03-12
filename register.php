@@ -183,7 +183,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 <div class="col">
 
                 </div>
-                <div class="col" style="text-align:right;">
+                <div class="col-12">
                     <h1 style="font-weight:100;color:blue;text-align:center;">登録情報の確認</h1>
                 </div>
                 <div class="col">
@@ -191,82 +191,61 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 </div>
             </div>
         </div>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col">
-
-                </div>
-                <div class="col" style="display:flex;justify-content:center;">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>ユーザ名</th>
-                            <td>
-                                <div class="mb-3">
-                                    <?=$user_name;?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>ユーザID</th>
-                            <td>
-                                <div class="mb-3">
-                                    <?=$USERS_ID;?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>メールアドレス</th>
-                            <td>
-                                <div class="mb-3">
-                                    <?=$email; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>パスワード</th>
-                            <td>
-                                <div class="mb-3">
-                                    <?=$password;?>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col">
-
-                </div>
-            </div>
-            <br>
-            <!--送信ボタン-->
-
-            <div class="container text-center;">
-                <div class="row">
-                    <div class="col">
-
-                    </div>
-                    <div class="col" style="text-align:center;display:flex;justify-content:center;">
-                    <form action="register.php?mode=return" method="post">
-                        <input type="hidden" name="user_name" value="<?=$user_name?>">
-                        <input type="hidden" name="USERS_ID" value="<?=$USERS_ID?>">
-                        <input type="hidden" name="email" value="<?=$email?>">
-                        <input type="hidden" name="password" value="<?=$password ?>">
-                        <button type="submit" name="flg" class="btn btn-secondary" value="1">戻る</button>
-                    </form>
-
-                    <form action="register.php?mode=registercomplete" method="post">
-                        <input type="hidden" name="user_name" value="<?=$user_name?>">
-                        <input type="hidden" name="USERS_ID" value="<?=$USERS_ID?>">
-                        <input type="hidden" name="email" value="<?=$email?>">
-                        <input type="hidden" name="password" value="<?=$password ?>">
-                        <button type="submit" name="complete" class="btn btn-primary" value="1">登録</button>
-                    </form>
-                    </div>
-                    <div class="col">
-
-                    </div>
-                </div>
-            </div>
+        <div style="display:flex;justify-content:center;">
+            <table class="table table-bordered" style="display:flex;justify-content:center;">
+                <tr>
+                    <th style="white-space:nowrap;">ユーザ名</th>
+                    <td>
+                        <div class="mb-3">
+                            <?=$user_name;?>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="white-space:nowrap;">ユーザID</th>
+                    <td>
+                        <div class="mb-3">
+                            <?=$USERS_ID;?>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="white-space:nowrap;">メールアドレス</th>
+                    <td>
+                        <div class="mb-3">
+                            <?=$email; ?>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="white-space:nowrap;">パスワード</th>
+                    <td>
+                        <div class="mb-3">
+                            <?=$password;?>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
+        <br>
+        <!--送信ボタン-->
+            <div style="display:flex;justify-content:center;">
+                <form action="register.php?mode=return" method="post">
+                    <input type="hidden" name="user_name" value="<?=$user_name?>">
+                    <input type="hidden" name="USERS_ID" value="<?=$USERS_ID?>">
+                    <input type="hidden" name="email" value="<?=$email?>">
+                    <input type="hidden" name="password" value="<?=$password ?>">
+                    <button type="submit" name="flg" class="btn btn-secondary" value="1">戻る</button>
+                </form>
+                &nbsp;
+                <form action="register.php?mode=registercomplete" method="post">
+                    <input type="hidden" name="user_name" value="<?=$user_name?>">
+                    <input type="hidden" name="USERS_ID" value="<?=$USERS_ID?>">
+                    <input type="hidden" name="email" value="<?=$email?>">
+                    <input type="hidden" name="password" value="<?=$password ?>">
+                    <button type="submit" name="complete" class="btn btn-primary" value="1">登録</button>
+                </form>
+            </div>
     </main>
     <!--main終了-->
 </body>
@@ -307,7 +286,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         <!--main-->
         <main>
             <div class="container text-center">
-                <span style="text-align:center;color:red;">※登録した情報は忘れないようにメモなどに控えて下さい。</span>
+                <span style="text-align:center;color:red;white-space:nowrap;">※登録した情報は忘れないようにメモなどに控えて下さい。</span>
             </div>
             <!--戻るボタン-->
             <div class="container text-center;">
@@ -318,7 +297,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     <div class="col" style="justify-content:center; text-align:center;">
                         <table class="table table-bordered">
                             <tr>
-                                <th>ユーザ名</th>
+                                <th style="white-space:nowrap;">ユーザ名</th>
                                 <td>
                                     <div class="mb-3">
                                         <?=$user_name;?>
@@ -326,7 +305,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                                 </td>
                             </tr>
                             <tr>
-                                <th>ユーザID</th>
+                                <th style="white-space:nowrap;">ユーザID</th>
                                 <td>
                                     <div class="mb-3">
                                         <?=$USERS_ID;?>
@@ -334,7 +313,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                                 </td>
                             </tr>
                             <tr>
-                                <th>メールアドレス</th>
+                                <th style="white-space:nowrap;">メールアドレス</th>
                                 <td>
                                     <div class="mb-3">
                                         <?=$email; ?>
@@ -342,7 +321,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                                 </td>
                             </tr>
                             <tr>
-                                <th>パスワード</th>
+                                <th style="white-space:nowrap;">パスワード</th>
                                 <td>
                                     <div class="mb-3">
                                         <?=$password;?>

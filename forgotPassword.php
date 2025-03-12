@@ -4,8 +4,6 @@ require_once('Modules/User.Class.php');
 
 require_once('Modules/Passwordreset.Class.php');
 
-
-
 $passwordreset = new Passwordreset();
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -23,7 +21,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     $msg = $passwordreset->authorize($email,$_SESSION['_csrf_token']);
     $mailsend = 1;
-    
 
 }
 
@@ -67,10 +64,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     <main style="margin-top:50px;">
 
-    <?php if(isset($msg)){ ?>
-
-            <div style="text-align:center;color:red;"><?=$msg?></div>
-
+    <?php if(isset($msg)&& $msg=="メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。<br>ご不便おかけしますが、メールの送信に数分かかる場合もございます。<br>"){ ?>
+            <div style="text-align:center;color:green;"><?=$msg?></div>
+    <?php }elseif(isset($msg)){?>
+        <div style="text-align:center;color:red;"><?=$msg?></div>
+    <?php }else{?>
     <?php }?>
 
         <form action="" method="post">
@@ -153,7 +151,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                             <button type="button" class="btn btn-secondary" onclick="location.href='login.php'">戻る</button>
                             &nbsp;
-                            <?php if(isset($mailsend)&& $msg=="メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。"){?>
+                            <?php if(isset($mailsend)&& $msg=="メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。<br>ご不便おかけしますが、メールの送信に数分かかる場合もございます。<br>"){?>
                                 <button type="submit" class="btn btn-primary" disabled>送信</button>
                             <?php }else{?>
                                 <button type="submit" class="btn btn-primary">送信</button>

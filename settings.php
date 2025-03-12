@@ -32,6 +32,27 @@ $user_id = $settings->getUserid();
 
 $shoppingnum = $settings->shoppingNum($user_id);
 
+//pokemonの取得
+// PokeAPIのエンドポイント
+$apiUrl = "https://pokeapi.co/api/v2/pokemon/";
+
+//500回まではポケモンを出す（ポケモンが足りなくなるため）
+if($shoppingnum<=500){
+// 取得したいポケモンの名前またはID
+    $pokemonNameOrId = "{$shoppingnum}"; // 例: "pikachu" または "25"
+
+    // APIリクエストを送信
+    $response = file_get_contents($apiUrl . $pokemonNameOrId);
+
+    // レスポンスをJSONとしてデコード
+    $pokemonData = json_decode($response, true);
+
+    // 画像URLを取得
+    $imageUrl = $pokemonData['sprites']['front_default'];
+
+    $pokemon = $imageUrl;
+}
+
 
 
 //金額のセレクトボックス値
@@ -374,6 +395,9 @@ if(isset($_SESSION) && empty($_SESSION)){
         <div class="col-10 py-3">
             <span><?php echo $today;?></span><br>
             <span><?= $shoppingnum;?>回目のお買い物</span>
+            <?php if(isset($pokemon)){?>
+                <img src="<?= $pokemon;?>" alt="noimage" style="width:80px;height:80px;">
+            <?php }?>
         </div>
         <div class="col"></div>
     </div>

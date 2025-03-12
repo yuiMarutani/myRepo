@@ -72,8 +72,8 @@ class Passwordreset{
                 $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
                 $mail->Username   = 'okaimono@marutani098723.com';                     //SMTP username
                 $mail->Password   = 'Okym2349!';                               //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+                $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+                $mail->Port       =  587;                                   //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
                 $mail->CharSet = 'UTF-8';
                 $_SESSION['email'] = $email;
 
@@ -91,17 +91,54 @@ class Passwordreset{
                 $mail->isHTML(true);                        //Set email format to HTML
                 $mail->Subject = 'お買い物管理アプリパスワードリセットについて';
                 // HTML設定
-                $mail->isHTML(TRUE);
-                $mail->Body = "$user_name 様";
-                
+                $mail->Body = "
+                <html>
+                <head>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                        }
+                        .container {
+                            padding: 20px;
+                            border: 1px solid #ddd;
+                            border-radius: 5px;
+                            max-width: 600px;
+                            margin: auto;
+                        }
+                        .button {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            margin-top: 20px;
+                            background-color: #007bff;
+                            color: #fff;
+                            text-decoration: none;
+                            border-radius: 5px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <p>$user_name 様</p>
+                        <p>お買い物管理アプリをご利用いただき有難うございます。</p>
+                        <p>お手数ですが24時間以内に以下リンクを押し、パスワードをリセットして下さい。</p>
+                        <a href='https://marutani098723.com/new_app/passwordReset.php?csrfToken=$csrfToken&email=$email' class='button'>パスワードリセット</a>
+                        <p>お買い物事務局一同</p>
+                    </div>
+                </body>
+                </html>
+                ";
+
+                // プレーンテキストメールの内容を設定
                 $mail->AltBody = "
                 $user_name 様
 
                 お買い物管理アプリをご利用いただき有難うございます。
                 お手数ですが24時間以内に以下リンクを押し、パスワードをリセットして下さい。
-                <a href='https://marutani098723.com/new_app/passwordReset.php?csrfToken=$csrfToken'>パスワードリセット</a>
-                
-                お買い物事務局一同";
+                https://marutani098723.com/new_app/passwordReset.php?csrfToken=$csrfToken&email=$email
+
+                お買い物事務局一同
+                ";
             
                 $mail->send();
                 /* echo 'Message has been sent'; */
@@ -109,7 +146,7 @@ class Passwordreset{
                 echo "メッセージの送信に失敗しました。 Mailer Error: {$mail->ErrorInfo}";
             }
 
-            $msg .= 'メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。';
+            $msg .= 'メール宛てにパスワードのリセット用リンクを送信しました。<br>24時間以内にリセットして下さい。<br>ご不便おかけしますが、メールの送信に数分かかる場合もございます。<br>';
             
         }else{
             //emailが入力されていないとき

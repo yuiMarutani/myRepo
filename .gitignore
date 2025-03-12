@@ -1,0 +1,18 @@
+#バックアップフォルダは無視
+old/
+
+#画像、css無視
+image/
+css/
+
+#Modules認証ファイル無視
+Modules/Authentification.Class.php
+
+#Modules DB接続
+Modules/Connect.Class.php
+
+#Modules passwordreset接続情報
+Modules/Passwordreset.Class.php
+
+#uploadフォルダ無視
+uploads/
