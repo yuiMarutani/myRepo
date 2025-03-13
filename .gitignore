@@ -5,8 +5,6 @@ old/
 image/
 css/
 
-#wrapper.php..個人情報保護のため
-wrapper.php
 
 #uploadフォルダ無視
 uploads/
