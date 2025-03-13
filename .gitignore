@@ -1,0 +1,15 @@
+#バックアップフォルダは無視
+old/
+
+#画像、css無視
+image/
+css/
+
+#Modules認証ファイル無視
+
+#Modules DB接続
+
+#Modules passwordreset接続情報
+
+#uploadフォルダ無視
+uploads/
