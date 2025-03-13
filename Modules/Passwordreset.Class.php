@@ -139,9 +139,12 @@ class Passwordreset{
 
                 お買い物事務局一同
                 ";
-            
-                $mail->send();
-                /* echo 'Message has been sent'; */
+                if($mail->send()){
+     /*                echo "Message sent successfully!"; */
+                } else {
+                 /*   echo "Message failed to send!"; */
+                }
+                
             } catch (Exception $e) {
                 echo "メッセージの送信に失敗しました。 Mailer Error: {$mail->ErrorInfo}";
             }
