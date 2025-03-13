@@ -5,11 +5,8 @@ old/
 image/
 css/
 
-#Modules認証ファイル無視
-
-#Modules DB接続
-
-#Modules passwordreset接続情報
+#wrapper.php..個人情報保護のため
+wrapper.php
 
 #uploadフォルダ無視
 uploads/
