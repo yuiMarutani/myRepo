@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/105368d6-20bc-4342-92c4-523bb2bfae75
 ## ご使用方法
 1.お買い物管理アプリログイン画面にアクセスします。<br>
 https://marutani098723.com/new_app/login.php<br><br>
-2.<br>ユーザーID：Tester<br>パスワード：passWord123 <br>でテストユーザとしてログインしてください。<br>
+2.新規登録からユーザとパスワードを登録し、ログイン。
 左上のハンバーガーメニューアイコンをタップし、サイドバーのメニューをタップします。<br>
 
 ## メニューの説明
