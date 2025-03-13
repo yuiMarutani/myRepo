@@ -36,24 +36,41 @@ $shoppingnum = $settings->shoppingNum($user_id);
 // PokeAPIのエンドポイント
 $apiUrl = "https://pokeapi.co/api/v2/pokemon/";
 
-//500回まではポケモンを出す（ポケモンが足りなくなるため）
-if($shoppingnum<=500){
-// 取得したいポケモンの名前またはID
-    $pokemonNameOrId = "{$shoppingnum}"; // 例: "pikachu" または "25"
+// キャッシュディレクトリ
+$cacheDir = 'cache/';
 
-    // APIリクエストを送信
-    $response = file_get_contents($apiUrl . $pokemonNameOrId);
+// キャッシュファイルのパス
+$cacheFile = $cacheDir . $shoppingnum . '.json';
 
-    // レスポンスをJSONとしてデコード
-    $pokemonData = json_decode($response, true);
+// キャッシュディレクトリが存在しない場合は作成
+if (!is_dir($cacheDir)) {
+    mkdir($cacheDir, 0777, true);
+}
+
+// 500回まではポケモンを出す（ポケモンが足りなくなるため）
+if ($shoppingnum <= 500) {
+    // キャッシュファイルが存在し、有効期限内の場合はキャッシュを利用
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 86400) { // 24時間キャッシュ
+        $pokemonData = json_decode(file_get_contents($cacheFile), true);
+    } else {
+        // 取得したいポケモンの名前またはID
+        $pokemonNameOrId = "{$shoppingnum}"; // 例: "pikachu" または "25"
+
+        // APIリクエストを送信
+        $response = file_get_contents($apiUrl . $pokemonNameOrId);
+
+        // レスポンスをJSONとしてデコード
+        $pokemonData = json_decode($response, true);
+
+        // キャッシュファイルに保存
+        file_put_contents($cacheFile, json_encode($pokemonData));
+    }
 
     // 画像URLを取得
     $imageUrl = $pokemonData['sprites']['front_default'];
 
     $pokemon = $imageUrl;
 }
-
-
 
 //金額のセレクトボックス値
 
