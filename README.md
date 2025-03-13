@@ -9,7 +9,7 @@
 
 ## ご使用方法
 1.お買い物管理アプリログイン画面にアクセスします。<br>
-https://marutani098723.com/new_app/login.php<br>
+https://marutani098723.com/new_app/login.php　<br><br>
 2.ユーザーID：Tester、パスワード：passWord123 でテストユーザとしてログインしてください。<br>
 左上のハンバーガーメニューアイコンをタップし、サイドバーのメニューをタップします。<br>
 
