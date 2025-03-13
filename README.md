@@ -34,7 +34,7 @@ Special Thanks:<br>
 PokéAPI Team: Thank you for developing such a wonderful API, pokemons help attract children.<br>
 Copilot: It wouldn't have been possible without his help.<br>
 
-### 課題
+## 課題
 1.「設定」で所持金等を設定しないと購入確定できない仕様にしてしまったので、設定しなくても使用できる仕様に変更したい。<br>
 2.黒いテーブルを多く使用したが、黒だとお年寄り等だと見えずらいかもしれない。<br>
 3.商品の操作は簡単かもしれないが、子どもやお年寄りにとって漢字が多く、もっとひらがな等を増やすべき。<br>
