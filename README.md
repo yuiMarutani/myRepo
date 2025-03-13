@@ -32,7 +32,9 @@ https://marutani098723.com/new_app/login.php<br><br>
 
 Special Thanks:<br>
 PokéAPI Team: Thank you for developing such a wonderful API, pokemons help attract children.<br>
-Copilot: It wouldn't have been possible without his help.<br>
+Copilot: It wouldn't have been possible without his help.<br><br>
+## ライセンス
+LGPL 2.1 license<br>
 
 ## 課題
 1.「設定」で所持金等を設定しないと購入確定できない仕様にしてしまったので、設定しなくても使用できる仕様に変更したい。<br>
