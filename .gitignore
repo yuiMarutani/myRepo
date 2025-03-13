@@ -1,18 +1,18 @@
 #バックアップフォルダは無視
-old/
+!old/
 
 #画像、css無視
-image/
-css/
+!image/
+!css/
 
 #Modules認証ファイル無視
-Modules/Authentification.Class.php
+!Modules/Authentification.Class.php
 
 #Modules DB接続
-Modules/Connect.Class.php
+!Modules/Connect.Class.php
 
 #Modules passwordreset接続情報
-Modules/Passwordreset.Class.php
+!Modules/Passwordreset.Class.php
 
 #uploadフォルダ無視
-uploads/
+!uploads/
